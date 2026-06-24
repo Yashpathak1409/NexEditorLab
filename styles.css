@@ -540,6 +540,7 @@ body.light-theme .moon-icon {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .tool-card:hover {
     transform: translateY(-5px) scale(1.01);
@@ -608,8 +609,6 @@ body.light-theme .moon-icon {
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 24px;
-    flex-grow: 1;
-    min-height: 72px;
 }
 
 .tool-btn {
@@ -620,6 +619,7 @@ body.light-theme .moon-icon {
     align-items: center;
     gap: 8px;
     transition: var(--transition);
+    margin-top: auto;
 }
 
 .tool-btn i {
@@ -1123,12 +1123,15 @@ body.light-theme .moon-icon {
     border-radius: var(--radius-md);
     overflow: hidden;
     position: relative;
-    aspect-ratio: 1;
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.2s, border-color 0.2s;
     user-select: none;
     cursor: grab;
+}
+
+.images-grid .photo-card {
+    aspect-ratio: 1;
 }
 
 .photo-card:active {
