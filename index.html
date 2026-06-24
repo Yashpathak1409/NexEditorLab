@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexEditor Lab - Premium PDF & Photo Workspace</title>
+    <meta name="description" content="Convert your photos and formatted notes/text to high-quality PDF files instantly and securely in your browser.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SortableJS (Drag & Drop Reordering) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <!-- jsPDF (Core PDF Generation) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2pdf.js (HTML to PDF) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- PDF.js (PDF Reading & Rendering) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- pdf-lib (Split/Merge operations) -->
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- JSZip (Package multiple images to zip) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Tesseract.js (Local Image OCR) -->
+    <script src="https://unpkg.com/tesseract.js@5.1.0/dist/tesseract.min.js"></script>
+    <!-- marked (Markdown parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- App Logic script -->
+    <script type="module" src="/app.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="logo-area">
+            <div class="logo-icon-wrapper">
+                <i data-lucide="file-text" class="logo-icon"></i>
+            </div>
+            <div>
+                <span class="logo-text">NexEditor <span class="gradient-text">Lab</span></span>
+                <p class="logo-subtitle">Creative Workspace Suite</p>
+            </div>
+        </div>
+        <button id="theme-toggle-mobile" class="theme-toggle-btn-mobile" aria-label="Toggle theme">
+            <i data-lucide="sun" class="sun-icon"></i>
+            <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon-wrapper">
+                        <i data-lucide="file-text" class="logo-icon"></i>
+                    </div>
+                    <div>
+                        <span class="logo-text">NexEditor <span class="gradient-text">Lab</span></span>
+                        <p class="logo-subtitle">Creative Workspace Suite</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" id="nav-dashboard" data-target="dashboard-view">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" id="nav-photos" data-target="photos-view">
+                    <i data-lucide="image"></i>
+                    <span>Photos to PDF</span>
+                </button>
+                <button class="nav-item" id="nav-notes" data-target="notes-view">
+                    <i data-lucide="edit-3"></i>
+                    <span>Notes to PDF</span>
+                </button>
+                <button class="nav-item" id="nav-edit" data-target="edit-view">
+                    <i data-lucide="file-signature"></i>
+                    <span>Edit PDF</span>
+                </button>
+                <button class="nav-item" id="nav-compress" data-target="compress-view">
+                    <i data-lucide="file-cog"></i>
+                    <span>PDF Compressor</span>
+                </button>
+                <button class="nav-item" id="nav-photo-compress" data-target="photo-compress-view">
+                    <i data-lucide="image"></i>
+                    <span>Photo Compressor</span>
+                </button>
+                <button class="nav-item" id="nav-photo-resize" data-target="photo-resize-view">
+                    <i data-lucide="maximize-2"></i>
+                    <span>Photo Resizer</span>
+                </button>
+                <button class="nav-item" id="nav-organizer" data-target="organizer-view">
+                    <i data-lucide="layers"></i>
+                    <span>PDF Page Organizer</span>
+                </button>
+                <button class="nav-item" id="nav-pdf-to-img" data-target="pdf-to-image-view">
+                    <i data-lucide="file-image"></i>
+                    <span>PDF to Image</span>
+                </button>
+                <button class="nav-item" id="nav-ocr" data-target="ocr-view">
+                    <i data-lucide="scan-text"></i>
+                    <span>Image Text Extractor</span>
+                </button>
+                <button class="nav-item" id="nav-markdown" data-target="markdown-view">
+                    <i data-lucide="file-code"></i>
+                    <span>Markdown to PDF</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light and dark themes">
+                    <i data-lucide="sun" class="sun-icon"></i>
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <span class="theme-text">Toggle Theme</span>
+                </button>
+                <div class="privacy-tag">
+                    <i data-lucide="shield-check"></i>
+                    <span>Local & Secure Processing</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <header class="top-header">
+                <div class="header-title-area">
+                    <h1 id="view-title">Dashboard Overview</h1>
+                    <p id="view-subtitle" class="text-secondary">Welcome to NexEditor Lab. Convert your files securely.</p>
+                </div>
+                <div class="header-actions">
+                    <div class="status-indicator" title="All operations run 100% locally in your browser. No files are uploaded to any server.">
+                        <i data-lucide="shield-check" class="status-icon"></i>
+                        <span class="pulse-dot"></span>
+                        <span class="status-text">Local Engine Active</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Views Stack -->
+            <div class="views-container">
+                
+                <!-- 1. DASHBOARD VIEW -->
+                <section id="dashboard-view" class="view-panel active">
+                    <div class="dashboard-hero">
+                        <div class="hero-content">
+                            <h2>Fast, Local, and Beautiful PDF Generation</h2>
+                            <p>Select a workspace tool below to begin your PDF document creation. Everything runs directly in your browser—no files ever touch a server.</p>
+                        </div>
+                        <div class="hero-glow-blob"></div>
+                    </div>
+
+                    <div class="tools-grid">
+                        <div class="tool-card" id="card-photos">
+                            <div class="tool-icon-box photo-gradient">
+                                <i data-lucide="images"></i>
+                            </div>
+                            <h3>Photos to PDF</h3>
+                            <p>Upload files (JPG, PNG, WebP), crop, rotate, reorder via drag-and-drop, and merge them into a single high-quality PDF.</p>
+                            <span class="tool-btn">Open Photos Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-notes">
+                            <div class="tool-icon-box notes-gradient">
+                                <i data-lucide="file-signature"></i>
+                            </div>
+                            <h3>Notes & Text to PDF</h3>
+                            <p>Write raw or structured notes in our WYSIWYG rich text editor, choose templates, apply custom typography, and print to styled PDFs.</p>
+                            <span class="tool-btn">Open Notes Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-edit">
+                            <div class="tool-icon-box edit-gradient">
+                                <i data-lucide="file-edit"></i>
+                            </div>
+                            <h3>Edit & Annotate PDF</h3>
+                            <p>Upload an existing PDF, write text comments, sign pages with freehand drawing, and export the finished document securely.</p>
+                            <span class="tool-btn">Open Editor Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-compress">
+                            <div class="tool-icon-box compress-gradient">
+                                <i data-lucide="file-cog"></i>
+                            </div>
+                            <h3>PDF Compressor</h3>
+                            <p>Reduce the file size of your PDF documents locally. Control compression quality and downscale page images dynamically.</p>
+                            <span class="tool-btn">Open Compressor Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-photo-compress">
+                            <div class="tool-icon-box photo-compress-gradient">
+                                <i data-lucide="image"></i>
+                            </div>
+                            <h3>Photo Compressor</h3>
+                            <p>Compress PNG, JPEG, and WebP images locally in your browser. Choose custom output quality and save storage space.</p>
+                            <span class="tool-btn">Open Compressor Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-photo-resize">
+                            <div class="tool-icon-box resize-gradient">
+                                <i data-lucide="maximize-2"></i>
+                            </div>
+                            <h3>Photo Resizer</h3>
+                            <p>Resize images proportionally with aspect ratio lock or scale by percentage. Instantly export to WebP/JPEG/PNG.</p>
+                            <span class="tool-btn">Open Resizer Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-organizer">
+                            <div class="tool-icon-box organizer-gradient">
+                                <i data-lucide="layers"></i>
+                            </div>
+                            <h3>PDF Page Organizer</h3>
+                            <p>Merge multiple PDFs, split documents, delete pages, or drag-and-drop pages to reorder them completely offline.</p>
+                            <span class="tool-btn">Open Organizer Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-pdf-to-img">
+                            <div class="tool-icon-box pdf-to-img-gradient">
+                                <i data-lucide="file-image"></i>
+                            </div>
+                            <h3>PDF to Image</h3>
+                            <p>Convert PDF pages into high-resolution PNG, JPEG, or WebP images and download them as a ZIP archive locally.</p>
+                            <span class="tool-btn">Open Converter Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-ocr">
+                            <div class="tool-icon-box ocr-gradient">
+                                <i data-lucide="scan-text"></i>
+                            </div>
+                            <h3>Image Text Extractor</h3>
+                            <p>Extract copyable text from photos or scanned PDF documents offline using client-side OCR engine text scanning.</p>
+                            <span class="tool-btn">Open Extractor Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-markdown">
+                            <div class="tool-icon-box markdown-gradient">
+                                <i data-lucide="file-code"></i>
+                            </div>
+                            <h3>Markdown to PDF</h3>
+                            <p>Write documents using Markdown syntax with live styled side-by-side print preview layouts and print to PDF.</p>
+                            <span class="tool-btn">Open Editor Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Quick tips section -->
+                    <div class="tips-section">
+                        <h3><i data-lucide="sparkles"></i> Pro Features Included</h3>
+                        <div class="tips-grid">
+                            <div class="tip-item">
+                                <div class="tip-icon"><i data-lucide="move"></i></div>
+                                <div>
+                                    <h4>Drag & Drop Reorder</h4>
+                                    <p>Easily swap and sort uploaded images before generating the document.</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon"><i data-lucide="rotate-cw"></i></div>
+                                <div>
+                                    <h4>Instant Rotation</h4>
+                                    <p>Rotate individual images by 90-degree steps to fit margins perfectly.</p>
+                                </div>
+                            </div>
+                            <div class="tip-item">
+                                <div class="tip-icon"><i data-lucide="palette"></i></div>
+                                <div>
+                                    <h4>Visual Templates</h4>
+                                    <p>Start drafting quickly with Meeting Notes, CV outlines, and Letter templates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. PHOTOS TO PDF VIEW -->
+                <section id="photos-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="photos-work-panel">
+                            <i data-lucide="images"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="photos-settings-panel">
+                            <i data-lucide="settings"></i> PDF Options
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <!-- File Upload and Management Area -->
+                        <div class="workspace-main" id="photos-work-panel">
+                            <input type="file" id="photo-input" multiple accept="image/png, image/jpeg, image/webp" style="display: none;">
+                            <div class="upload-zone" id="photo-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="cloud-upload" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop photos here</h3>
+                                    <p class="text-secondary">Supports JPEG, PNG, and WebP images (max 10MB per file)</p>
+                                    <button class="btn btn-primary btn-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse Files
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- List of Images (Sortable Grid) -->
+                            <div class="images-manager-header" style="display: none;" id="manager-header">
+                                <div class="manager-meta">
+                                    <span id="photo-count-label" class="badge">0 Images</span>
+                                    <span class="text-secondary">Drag cards to reorder the PDF page sequence</span>
+                                </div>
+                                <button class="btn btn-danger-outline btn-sm" id="btn-clear-photos">
+                                    <i data-lucide="trash-2"></i> Clear All
+                                </button>
+                            </div>
+
+                            <div class="images-grid" id="sortable-images-grid">
+                                <!-- Cards injected by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="photos-settings-panel">
+                            <div class="settings-card">
+                                <h2>PDF Configuration</h2>
+                                
+                                <div class="settings-group">
+                                    <label class="settings-label" for="photo-page-size">
+                                        <i data-lucide="ruler"></i> Page Format
+                                    </label>
+                                    <select id="photo-page-size" class="form-select">
+                                        <option value="a4" selected>A4 (Standard Document)</option>
+                                        <option value="letter">US Letter (Standard Office)</option>
+                                        <option value="fit">Fit to Image Size</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group" id="group-photo-orientation">
+                                    <label class="settings-label">
+                                        <i data-lucide="rotate-3d"></i> Page Orientation
+                                    </label>
+                                    <div class="segmented-control">
+                                        <input type="radio" id="orient-portrait" name="photo-orientation" value="portrait" checked>
+                                        <label for="orient-portrait">Portrait</label>
+                                        
+                                        <input type="radio" id="orient-landscape" name="photo-orientation" value="landscape">
+                                        <label for="orient-landscape">Landscape</label>
+                                    </div>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="photo-margin">
+                                        <i data-lucide="maximize-2"></i> Page Margins
+                                    </label>
+                                    <select id="photo-margin" class="form-select">
+                                        <option value="none" selected>No Margins (Full Bleed)</option>
+                                        <option value="small">Small (10mm)</option>
+                                        <option value="medium">Medium (20mm)</option>
+                                        <option value="large">Large (30mm)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group" id="group-photo-fit">
+                                    <label class="settings-label" for="photo-fit-mode">
+                                        <i data-lucide="aspect-ratio"></i> Image Scaling
+                                    </label>
+                                    <select id="photo-fit-mode" class="form-select">
+                                        <option value="contain" selected>Fit / Contain (Keep Aspect Ratio)</option>
+                                        <option value="fill">Fill Page (Stretch & Crop)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <div class="label-with-value">
+                                        <label class="settings-label" for="photo-quality">
+                                            <i data-lucide="sliders"></i> Compression Quality
+                                        </label>
+                                        <span id="quality-value">85%</span>
+                                    </div>
+                                    <input type="range" id="photo-quality" min="10" max="100" value="85" class="form-range">
+                                    <span class="range-hint">Higher quality results in larger file size</span>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-generate-photo-pdf" disabled>
+                                    <i data-lucide="file-down"></i> Generate & Download PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. NOTES TO PDF VIEW -->
+                <section id="notes-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="notes-work-panel">
+                            <i data-lucide="edit-3"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="notes-settings-panel">
+                            <i data-lucide="settings"></i> Styling Options
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <!-- Rich Text Editor Container -->
+                        <div class="workspace-main" id="notes-work-panel">
+                            <div class="editor-outer-container">
+                                <!-- Rich Text Toolbar -->
+                                <div class="editor-toolbar">
+                                    <div class="toolbar-group">
+                                        <button type="button" class="tool-btn-editor" data-cmd="bold" title="Bold (Ctrl+B)">
+                                            <i data-lucide="bold"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="italic" title="Italic (Ctrl+I)">
+                                            <i data-lucide="italic"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="underline" title="Underline (Ctrl+U)">
+                                            <i data-lucide="underline"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="strikeThrough" title="Strikethrough">
+                                            <i data-lucide="strikethrough"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="toolbar-group">
+                                        <select class="toolbar-select" id="editor-header-select" title="Text Style">
+                                            <option value="p" selected>Normal Text</option>
+                                            <option value="h1">Header 1</option>
+                                            <option value="h2">Header 2</option>
+                                            <option value="h3">Header 3</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="toolbar-group">
+                                        <button type="button" class="tool-btn-editor" data-cmd="justifyLeft" title="Align Left">
+                                            <i data-lucide="align-left"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="justifyCenter" title="Align Center">
+                                            <i data-lucide="align-center"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="justifyRight" title="Align Right">
+                                            <i data-lucide="align-right"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="justifyFull" title="Justify">
+                                            <i data-lucide="align-justify"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="toolbar-group">
+                                        <button type="button" class="tool-btn-editor" data-cmd="insertUnorderedList" title="Bullet List">
+                                            <i data-lucide="list"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" data-cmd="insertOrderedList" title="Numbered List">
+                                            <i data-lucide="list-ordered"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="toolbar-group color-picker-wrapper">
+                                        <button type="button" class="tool-btn-editor" title="Text Color" id="btn-text-color">
+                                            <i data-lucide="baseline"></i>
+                                        </button>
+                                        <input type="color" id="editor-color-picker" value="#fafafa" class="color-picker-input">
+                                    </div>
+
+                                    <div class="toolbar-group">
+                                        <button type="button" class="tool-btn-editor" id="btn-insert-table" title="Insert 3x3 Table">
+                                            <i data-lucide="table"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor" id="btn-insert-date" title="Insert Current Date">
+                                            <i data-lucide="calendar"></i>
+                                        </button>
+                                        <button type="button" class="tool-btn-editor text-danger" id="btn-clear-editor" title="Clear All Content">
+                                            <i data-lucide="rotate-ccw"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Contextual Table Modifiers -->
+                                    <div class="toolbar-group" id="table-controls-group" style="display: none; border-color: var(--border-focus); background-color: var(--accent-light);">
+                                        <button type="button" class="tool-btn-editor text-accent" id="btn-table-row-add" title="Add Row Below" style="width: auto; padding: 0 8px; font-size: 0.8rem; font-weight:600; gap:4px; display:flex; align-items:center;">
+                                            <i data-lucide="plus" style="width:14px; height:14px;"></i>Row
+                                        </button>
+                                        <button type="button" class="tool-btn-editor text-danger" id="btn-table-row-delete" title="Delete Row" style="width: auto; padding: 0 8px; font-size: 0.8rem; font-weight:600; gap:4px; display:flex; align-items:center;">
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>Row
+                                        </button>
+                                        <button type="button" class="tool-btn-editor text-accent" id="btn-table-col-add" title="Add Column Right" style="width: auto; padding: 0 8px; font-size: 0.8rem; font-weight:600; gap:4px; display:flex; align-items:center;">
+                                            <i data-lucide="plus" style="width:14px; height:14px;"></i>Col
+                                        </button>
+                                        <button type="button" class="tool-btn-editor text-danger" id="btn-table-col-delete" title="Delete Column" style="width: auto; padding: 0 8px; font-size: 0.8rem; font-weight:600; gap:4px; display:flex; align-items:center;">
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>Col
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- The Page Sandbox (Visual Page Preview Mockup) -->
+                                <div class="page-sandbox-wrapper">
+                                    <div class="page-container-mock font-inter margin-med" id="notes-page-container">
+                                        <!-- Editable document content -->
+                                        <div id="notes-editor" contenteditable="true" class="notes-textarea">
+                                            <h1>Creative Document Workspace</h1>
+                                            <p>Welcome to your styled notes interface. You can type notes here directly, select a template from the right, format text, and generate beautifully typeset PDF documents.</p>
+                                            <p>Feel free to select text to try out formatting options, add list items, tables, or insert the current date. Make your notes clean and clear!</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="notes-settings-panel">
+                            <!-- Templates -->
+                            <div class="settings-card">
+                                <h2>Quick Templates</h2>
+                                <p class="card-desc text-secondary">Load pre-styled structures into your editor.</p>
+                                <div class="templates-list">
+                                    <button class="template-item active" data-template="blank">
+                                        <div class="template-icon"><i data-lucide="file"></i></div>
+                                        <div>
+                                            <h4>Blank Slate</h4>
+                                            <p>A fresh document page</p>
+                                        </div>
+                                    </button>
+                                    <button class="template-item" data-template="meeting">
+                                        <div class="template-icon"><i data-lucide="users"></i></div>
+                                        <div>
+                                            <h4>Meeting Minutes</h4>
+                                            <p>Agenda, attendees & action items</p>
+                                        </div>
+                                    </button>
+                                    <button class="template-item" data-template="letter">
+                                        <div class="template-icon"><i data-lucide="mail"></i></div>
+                                        <div>
+                                            <h4>Formal Letter</h4>
+                                            <p>Professional layout structure</p>
+                                        </div>
+                                    </button>
+                                    <button class="template-item" data-template="notes">
+                                        <div class="template-icon"><i data-lucide="book-open"></i></div>
+                                        <div>
+                                            <h4>Study & Research Notes</h4>
+                                            <p>Headers, summary & resources</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Typography and Margins -->
+                            <div class="settings-card">
+                                <h2>Styling & Options</h2>
+                                
+                                <div class="settings-group">
+                                    <label class="settings-label" for="notes-font">
+                                        <i data-lucide="type"></i> Typography Font
+                                    </label>
+                                    <select id="notes-font" class="form-select">
+                                        <option value="font-inter" selected>Inter (Sleek Geometric)</option>
+                                        <option value="font-playfair">Playfair Display (Elegant Serif)</option>
+                                        <option value="font-outfit">Outfit (Modern Tech)</option>
+                                        <option value="font-mono">Fira Code (Monospaced Technical)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="notes-margin">
+                                        <i data-lucide="maximize-2"></i> Document Margin
+                                    </label>
+                                    <select id="notes-margin" class="form-select">
+                                        <option value="margin-small">Narrow (15mm)</option>
+                                        <option value="margin-med" selected>Normal (25mm)</option>
+                                        <option value="margin-large">Wide (35mm)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="notes-page-format">
+                                        <i data-lucide="ruler"></i> Page Format
+                                    </label>
+                                    <select id="notes-page-format" class="form-select">
+                                        <option value="a4" selected>A4 (210 x 297mm)</option>
+                                        <option value="letter">US Letter (8.5" x 11")</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <!-- Header / Footer settings -->
+                                <div class="settings-group checkbox-group">
+                                    <input type="checkbox" id="notes-enable-header" checked>
+                                    <label for="notes-enable-header" class="checkbox-label">
+                                        <span>Enable Document Header</span>
+                                        <span class="sub-text text-secondary">Document title placed on top of pages</span>
+                                    </label>
+                                </div>
+                                <div class="settings-group" id="header-text-container">
+                                    <input type="text" id="notes-header-text" value="NexEditor Lab Exported Document" class="form-input" placeholder="Header title...">
+                                </div>
+
+                                <div class="settings-group checkbox-group">
+                                    <input type="checkbox" id="notes-enable-footer" checked>
+                                    <label for="notes-enable-footer" class="checkbox-label">
+                                        <span>Enable Page Numbers</span>
+                                        <span class="sub-text text-secondary">Appends standard numbering in footer</span>
+                                    </label>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-generate-notes-pdf">
+                                    <i data-lucide="file-down"></i> Generate & Download PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. EDIT PDF VIEW -->
+                <section id="edit-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="edit-work-panel">
+                            <i data-lucide="file-edit"></i> Annotator
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="edit-settings-panel">
+                            <i data-lucide="sliders"></i> Tools
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <!-- PDF Canvas Container -->
+                        <div class="workspace-main" id="edit-work-panel">
+                            <input type="file" id="pdf-edit-input" accept="application/pdf" style="display: none;">
+                            <div class="upload-zone" id="pdf-edit-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="file-text" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop PDF here to Edit</h3>
+                                    <p class="text-secondary">Upload an existing PDF (max 15MB)</p>
+                                    <button class="btn btn-primary btn-pdf-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse PDF File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PDF pages render container -->
+                            <div id="pdf-editor-container" class="pdf-editor-pages" style="display: none;">
+                                <!-- Canvases will be injected here -->
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="edit-settings-panel">
+                            <div class="settings-card">
+                                <h2>Edit Tools</h2>
+                                <p class="card-desc text-secondary">Choose an editing mode to modify pages.</p>
+                                
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="mouse-pointer"></i> Editor Mode
+                                    </label>
+                                    <div class="segmented-control vertical-segmented" style="flex-direction: column; height: auto;">
+                                        <input type="radio" id="edit-mode-pan" name="edit-tool-mode" value="pan" checked>
+                                        <label for="edit-mode-pan" style="text-align: left; padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 2px;"><i data-lucide="hand" style="width:14px; height:14px; margin-right:8px; vertical-align: middle;"></i>Navigate / Pan</label>
+                                        
+                                        <input type="radio" id="edit-mode-draw" name="edit-tool-mode" value="draw">
+                                        <label for="edit-mode-draw" style="text-align: left; padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 2px;"><i data-lucide="pen-tool" style="width:14px; height:14px; margin-right:8px; vertical-align: middle;"></i>Freehand Draw</label>
+                                        
+                                        <input type="radio" id="edit-mode-text" name="edit-tool-mode" value="text">
+                                        <label for="edit-mode-text" style="text-align: left; padding: 10px 14px; border-radius: var(--radius-sm);"><i data-lucide="type" style="width:14px; height:14px; margin-right:8px; vertical-align: middle;"></i>Add Text</label>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="edit-tool-color">
+                                        <i data-lucide="palette"></i> Annotation Color
+                                    </label>
+                                    <select id="edit-tool-color" class="form-select">
+                                        <option value="#1C1A17" selected>Deep Charcoal</option>
+                                        <option value="#1E3F35">Hunter Green</option>
+                                        <option value="#C85A3C">Terracotta Rust</option>
+                                        <option value="#CCA26B">Muted Gold</option>
+                                        <option value="#ef4444">Bright Red</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group" id="group-brush-size">
+                                    <div class="label-with-value">
+                                        <label class="settings-label" for="edit-brush-size">
+                                            <i data-lucide="activity"></i> Brush Size
+                                        </label>
+                                        <span id="brush-size-val">4px</span>
+                                    </div>
+                                    <input type="range" id="edit-brush-size" min="1" max="20" value="4" class="form-range">
+                                </div>
+
+                                <div class="settings-group" id="group-text-size" style="display: none;">
+                                    <div class="label-with-value">
+                                        <label class="settings-label" for="edit-text-size">
+                                            <i data-lucide="type"></i> Font Size
+                                        </label>
+                                        <span id="text-size-val">18px</span>
+                                    </div>
+                                    <input type="range" id="edit-text-size" min="10" max="60" value="18" class="form-range">
+                                </div>
+
+                                <div class="settings-group" id="group-text-font" style="display: none; margin-top: 14px;">
+                                    <label class="settings-label" for="edit-text-font">
+                                        <i data-lucide="type"></i> Font Family
+                                    </label>
+                                    <select id="edit-text-font" class="form-select">
+                                        <option value="'Inter', sans-serif" selected>Inter (Sans-serif)</option>
+                                        <option value="'Times New Roman', serif">Times New Roman (Serif)</option>
+                                        <option value="'Courier New', monospace">Courier (Monospace)</option>
+                                        <option value="Georgia, serif">Georgia</option>
+                                        <option value="Arial, sans-serif">Arial</option>
+                                        <option value="Helvetica, sans-serif">Helvetica</option>
+                                        <option value="monospace">Standard Monospace</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-danger-outline btn-block" id="btn-clear-pdf-edits">
+                                    <i data-lucide="rotate-ccw"></i> Reset Page Annotations
+                                </button>
+                                
+                                <button class="btn btn-action btn-block" id="btn-generate-edited-pdf" style="margin-top: 12px;" disabled>
+                                    <i data-lucide="file-down"></i> Save & Download PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. PDF COMPRESSOR VIEW -->
+                <section id="compress-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="compress-work-panel">
+                            <i data-lucide="file-cog"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="compress-settings-panel">
+                            <i data-lucide="sliders"></i> Options
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="compress-work-panel">
+                            <input type="file" id="pdf-compress-input" accept="application/pdf" style="display: none;">
+                            <div class="upload-zone" id="pdf-compress-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="file-cog" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop PDF here to Compress</h3>
+                                    <p class="text-secondary">Reduce PDF file size locally (max 15MB)</p>
+                                    <button class="btn btn-primary btn-pdf-compress-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse PDF File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Compression Info Card -->
+                            <div id="pdf-compress-info" class="settings-card" style="display: none; width: 100%; max-width: 500px; margin: 0 auto; text-align: center; padding: 32px;">
+                                <div class="upload-icon-circle" style="margin: 0 auto 16px;">
+                                    <i data-lucide="file-check" style="color: var(--accent); width:32px; height:32px;"></i>
+                                </div>
+                                <h3 id="compress-file-name" style="word-break: break-all; margin-bottom: 8px;">document.pdf</h3>
+                                <p id="compress-file-size" class="text-secondary" style="margin-bottom: 20px;">Original Size: 4.5 MB</p>
+                                <div style="display: flex; gap: 12px; justify-content: center;">
+                                    <button class="btn btn-danger-outline" id="btn-clear-compress-pdf">
+                                        <i data-lucide="trash-2"></i> Clear File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Options -->
+                        <div class="workspace-sidebar" id="compress-settings-panel">
+                            <div class="settings-card">
+                                <h2>Compression Options</h2>
+                                <p class="card-desc text-secondary">Choose the compression level to apply.</p>
+                                
+                                <div class="settings-group">
+                                    <label class="settings-label" for="compress-level">
+                                        <i data-lucide="sliders"></i> Compression Level
+                                    </label>
+                                    <select id="compress-level" class="form-select">
+                                        <option value="high">High Compression (Lowest quality, smallest size)</option>
+                                        <option value="medium" selected>Medium Compression (Balanced quality/size)</option>
+                                        <option value="low">Low Compression (Highest quality, largest size)</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-pdf-compress" disabled>
+                                    <i data-lucide="file-down"></i> Compress & Download PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. PHOTO COMPRESSOR VIEW -->
+                <section id="photo-compress-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="photo-compress-work-panel">
+                            <i data-lucide="image"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="photo-compress-settings-panel">
+                            <i data-lucide="sliders"></i> Settings
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="photo-compress-work-panel">
+                            <input type="file" id="photo-compress-input" multiple accept="image/png, image/jpeg, image/webp" style="display: none;">
+                            <div class="upload-zone" id="photo-compress-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="image" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop photos here to Compress</h3>
+                                    <p class="text-secondary">Compress JPEG, PNG, and WebP images (max 10MB per file)</p>
+                                    <button class="btn btn-primary btn-photo-compress-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse Images
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- List of uploaded images -->
+                            <div id="photo-compress-manager" style="display: none; width: 100%;">
+                                <div class="manager-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="photo-compress-count-label">0 Images</span>
+                                    <button class="btn btn-danger-outline btn-sm" id="btn-clear-photo-compress">
+                                        <i data-lucide="trash-2"></i> Clear All
+                                    </button>
+                                </div>
+                                <div class="sortable-grid" id="photo-compress-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px;">
+                                    <!-- Dynamic elements will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="photo-compress-settings-panel">
+                            <div class="settings-card">
+                                <h2>Compression Level</h2>
+                                <p class="card-desc text-secondary">Control the image size and quality trade-off.</p>
+                                
+                                <div class="settings-group">
+                                    <div class="label-with-value">
+                                        <label class="settings-label" for="photo-compress-quality">
+                                            <i data-lucide="sliders"></i> Target Quality
+                                        </label>
+                                        <span id="photo-compress-quality-val">70%</span>
+                                    </div>
+                                    <input type="range" id="photo-compress-quality" min="10" max="100" value="70" class="form-range">
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="photo-compress-format">
+                                        <i data-lucide="file-type"></i> Output Format
+                                    </label>
+                                    <select id="photo-compress-format" class="form-select">
+                                        <option value="original" selected>Keep Original Format</option>
+                                        <option value="jpeg">JPEG (Universal)</option>
+                                        <option value="webp">WebP (Highly Compressed)</option>
+                                        <option value="png">PNG (Lossless)</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-photo-compress" disabled>
+                                    <i data-lucide="download"></i> Compress Images
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. PHOTO RESIZER VIEW -->
+                <section id="photo-resize-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="photo-resize-work-panel">
+                            <i data-lucide="maximize-2"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="photo-resize-settings-panel">
+                            <i data-lucide="sliders"></i> Settings
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="photo-resize-work-panel">
+                            <input type="file" id="photo-resize-input" multiple accept="image/png, image/jpeg, image/webp" style="display: none;">
+                            <div class="upload-zone" id="photo-resize-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="maximize-2" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop photos here to Resize</h3>
+                                    <p class="text-secondary">Resize PNG, JPEG, and WebP images (max 10MB per file)</p>
+                                    <button class="btn btn-primary btn-photo-resize-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse Images
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- List of uploaded images -->
+                            <div id="photo-resize-manager" style="display: none; width: 100%;">
+                                <div class="manager-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="photo-resize-count-label">0 Images</span>
+                                    <button class="btn btn-danger-outline btn-sm" id="btn-clear-photo-resize">
+                                        <i data-lucide="trash-2"></i> Clear All
+                                    </button>
+                                </div>
+                                <div class="sortable-grid" id="photo-resize-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px;">
+                                    <!-- Dynamic elements will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="photo-resize-settings-panel">
+                            <div class="settings-card">
+                                <h2>Resize Settings</h2>
+                                <p class="card-desc text-secondary">Adjust width and height dimensions.</p>
+                                
+                                <div class="settings-group">
+                                    <label class="settings-label" for="photo-resize-mode">
+                                        <i data-lucide="scaling"></i> Resize Mode
+                                    </label>
+                                    <select id="photo-resize-mode" class="form-select">
+                                        <option value="percentage" selected>By Percentage</option>
+                                        <option value="dimensions">Custom Dimensions (Px)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group" id="group-resize-percent">
+                                    <div class="label-with-value">
+                                        <label class="settings-label" for="photo-resize-percent">
+                                            <i data-lucide="sliders"></i> Scale Percentage
+                                        </label>
+                                        <span id="photo-resize-percent-val">50%</span>
+                                    </div>
+                                    <input type="range" id="photo-resize-percent" min="10" max="200" value="50" class="form-range">
+                                </div>
+
+                                <div id="group-resize-dimensions" style="display: none;">
+                                    <div class="settings-group">
+                                        <label class="settings-label" for="photo-resize-width">
+                                            Width (Pixels)
+                                        </label>
+                                        <input type="number" id="photo-resize-width" class="form-input" placeholder="e.g. 1920" min="1">
+                                    </div>
+                                    <div class="settings-group">
+                                        <label class="settings-label" for="photo-resize-height">
+                                            Height (Pixels)
+                                        </label>
+                                        <input type="number" id="photo-resize-height" class="form-input" placeholder="e.g. 1080" min="1">
+                                    </div>
+                                    <div class="settings-group checkbox-group">
+                                        <input type="checkbox" id="photo-resize-aspect-ratio" checked>
+                                        <label for="photo-resize-aspect-ratio" class="checkbox-label">
+                                            <span>Lock Aspect Ratio</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="photo-resize-format">
+                                        <i data-lucide="file-type"></i> Output Format
+                                    </label>
+                                    <select id="photo-resize-format" class="form-select">
+                                        <option value="original" selected>Keep Original Format</option>
+                                        <option value="jpeg">JPEG</option>
+                                        <option value="webp">WebP</option>
+                                        <option value="png">PNG</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-photo-resize" disabled>
+                                    <i data-lucide="download"></i> Resize Images
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. PDF PAGE ORGANIZER VIEW -->
+                <section id="organizer-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="organizer-work-panel">
+                            <i data-lucide="layers"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="organizer-settings-panel">
+                            <i data-lucide="sliders"></i> Options
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="organizer-work-panel">
+                            <input type="file" id="organizer-file-input" multiple accept="application/pdf" style="display: none;">
+                            <div class="upload-zone" id="organizer-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="layers" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop PDF files here to Organize</h3>
+                                    <p class="text-secondary">Upload one or multiple PDFs. Merge, split, reorder, or rotate pages offline.</p>
+                                    <button class="btn btn-primary btn-organizer-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse PDFs
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Page grid manager -->
+                            <div id="organizer-manager" style="display: none; width: 100%;">
+                                <div class="manager-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="organizer-pages-count">0 Pages Loaded</span>
+                                    <button class="btn btn-danger-outline btn-sm" id="btn-clear-organizer">
+                                        <i data-lucide="trash-2"></i> Clear All
+                                    </button>
+                                </div>
+                                <div class="sortable-grid" id="organizer-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px;">
+                                    <!-- Dynamic page elements will go here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="organizer-settings-panel">
+                            <div class="settings-card">
+                                <h2>Organizer Options</h2>
+                                <p class="card-desc text-secondary">Configure final page assembly.</p>
+
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="info"></i> Quick Instructions
+                                    </label>
+                                    <div class="range-hint" style="margin-top: 6px; line-height: 1.4;">
+                                        Drag pages to reorder them. Hover over page cards to rotate or delete individual pages from the compiled output document.
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-organizer" disabled>
+                                    <i data-lucide="file-check"></i> Export Compiled PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. PDF TO IMAGE VIEW -->
+                <section id="pdf-to-image-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="pdf-to-img-work-panel">
+                            <i data-lucide="file-image"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="pdf-to-img-settings-panel">
+                            <i data-lucide="sliders"></i> Settings
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="pdf-to-img-work-panel">
+                            <input type="file" id="pdf-to-img-file-input" accept="application/pdf" style="display: none;">
+                            <div class="upload-zone" id="pdf-to-img-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="file-image" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop PDF here to convert to Images</h3>
+                                    <p class="text-secondary">Convert individual pages of your PDF document into JPEG/PNG/WebP offline.</p>
+                                    <button class="btn btn-primary btn-pdf-to-img-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse PDF
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PDF pages preview list -->
+                            <div id="pdf-to-img-manager" style="display: none; width: 100%;">
+                                <div class="manager-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="pdf-to-img-filename-label">No PDF loaded</span>
+                                    <button class="btn btn-danger-outline btn-sm" id="btn-clear-pdf-to-img">
+                                        <i data-lucide="trash-2"></i> Clear PDF
+                                    </button>
+                                </div>
+                                <div class="sortable-grid" id="pdf-to-img-preview-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 16px;">
+                                    <!-- Preview files -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="pdf-to-img-settings-panel">
+                            <div class="settings-card">
+                                <h2>Conversion Options</h2>
+                                <p class="card-desc text-secondary">Set image formats and rendering resolution.</p>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="pdf-to-img-format">
+                                        <i data-lucide="file-type"></i> Output Format
+                                    </label>
+                                    <select id="pdf-to-img-format" class="form-select">
+                                        <option value="png" selected>PNG (High Quality)</option>
+                                        <option value="jpeg">JPEG (Optimized Size)</option>
+                                        <option value="webp">WebP (Modern Standard)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="pdf-to-img-scale">
+                                        <i data-lucide="maximize-2"></i> Resolution Scale
+                                    </label>
+                                    <select id="pdf-to-img-scale" class="form-select">
+                                        <option value="1">1x (Standard Speed)</option>
+                                        <option value="2" selected>2x (High Definition)</option>
+                                        <option value="3">3x (Ultra Sharp)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="pdf-to-img-range">
+                                        <i data-lucide="list"></i> Page Range
+                                    </label>
+                                    <input type="text" id="pdf-to-img-range" class="form-input" placeholder="e.g. 1-3, 5 (blank for all)">
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="info"></i> Instruction
+                                    </label>
+                                    <div class="range-hint" style="margin-top: 4px; line-height: 1.4;">
+                                        Conversion runs 100% locally. Converting at 3x scale may require more device memory and time.
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-pdf-to-img" disabled>
+                                    <i data-lucide="download"></i> Download Image ZIP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. IMAGE TEXT EXTRACTOR (OCR) VIEW -->
+                <section id="ocr-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="ocr-work-panel">
+                            <i data-lucide="scan-text"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="ocr-settings-panel">
+                            <i data-lucide="sliders"></i> Result
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="ocr-work-panel">
+                            <input type="file" id="ocr-file-input" accept="image/png, image/jpeg, image/webp, application/pdf" style="display: none;">
+                            <div class="upload-zone" id="ocr-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="scan-text" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop Image/PDF here to Extract Text</h3>
+                                    <p class="text-secondary">Extract text locally using client-side OCR. Accept JPEG, PNG, WebP, or single-page PDF.</p>
+                                    <button class="btn btn-primary btn-ocr-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Image Preview Area -->
+                            <div id="ocr-preview-container" style="display: none; width: 100%; text-align: center; margin-top: 10px;">
+                                <div class="manager-header" style="margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="ocr-filename-label">No file loaded</span>
+                                    <button class="btn btn-danger-outline btn-sm" id="btn-clear-ocr">
+                                        <i data-lucide="trash-2"></i> Clear
+                                    </button>
+                                </div>
+                                <div class="ocr-preview-box" style="background-color: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; max-height: 400px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                    <img id="ocr-preview-img" style="max-width: 100%; max-height: 350px; object-fit: contain; border-radius: 4px; box-shadow: var(--shadow-sm);" alt="OCR Preview">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="ocr-settings-panel">
+                            <div class="settings-card" style="height: 100%; display: flex; flex-direction: column;">
+                                <h2>Extraction Control</h2>
+                                <p class="card-desc text-secondary">Set language and copy parsed characters.</p>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="ocr-language">
+                                        <i data-lucide="languages"></i> Scan Language
+                                    </label>
+                                    <select id="ocr-language" class="form-select">
+                                        <option value="eng" selected>English (Default)</option>
+                                        <option value="spa">Spanish (Español)</option>
+                                        <option value="fra">French (Français)</option>
+                                        <option value="deu">German (Deutsch)</option>
+                                        <option value="chi_sim">Simplified Chinese</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-group" style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px;">
+                                    <label class="settings-label">
+                                        <i data-lucide="file-text"></i> Extracted Text
+                                    </label>
+                                    <textarea id="ocr-result-text" class="form-input" style="flex-grow: 1; min-height: 200px; font-family: var(--font-sans); font-size: 0.88rem; line-height: 1.5; resize: none; width: 100%; padding: 12px; background-color: var(--bg-input);" placeholder="Extracted text will appear here..." readonly></textarea>
+                                </div>
+
+                                <div class="divider" style="margin: 15px 0;"></div>
+
+                                <div class="settings-group" style="display: flex; flex-direction: row; gap: 10px; margin-bottom: 12px;">
+                                    <button class="btn btn-secondary btn-block btn-sm" id="btn-copy-ocr" disabled>
+                                        <i data-lucide="copy"></i> Copy Text
+                                    </button>
+                                    <button class="btn btn-secondary btn-block btn-sm" id="btn-download-ocr" style="margin-left: 0;" disabled>
+                                        <i data-lucide="download-cloud"></i> Save TXT
+                                    </button>
+                                </div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-ocr" disabled>
+                                    <i data-lucide="scan"></i> Start Text Scanning
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 11. MARKDOWN TO PDF EDITOR VIEW -->
+                <section id="markdown-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="markdown-work-panel">
+                            <i data-lucide="file-code"></i> Editor
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="markdown-settings-panel">
+                            <i data-lucide="sliders"></i> Settings & Action
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <!-- Split panes layout inside workspace main -->
+                        <div class="workspace-main" id="markdown-work-panel" style="padding: 0; background: transparent; border: none;">
+                            <div class="markdown-editor-split" style="display: flex; gap: 20px; width: 100%; height: 100%;">
+                                <!-- Editor Area -->
+                                <div class="editor-pane" style="flex: 1; display: flex; flex-direction: column; height: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: var(--bg-card); overflow: hidden;">
+                                    <div class="editor-toolbar" style="padding: 10px 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar); display: flex; justify-content: space-between; align-items: center;">
+                                        <span class="photo-count" style="font-size: 0.82rem; font-weight: 700;">Markdown Editor</span>
+                                        <div class="toolbar-group" style="border: none; background: transparent;">
+                                            <span style="font-size: 0.72rem; color: var(--text-muted);">Supports Standard Markdown</span>
+                                        </div>
+                                    </div>
+                                    <textarea id="markdown-textarea" class="form-input" style="flex-grow: 1; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.6; padding: 20px; resize: none; border: none; width: 100%; height: calc(100% - 50px); background-color: var(--bg-sidebar); color: var(--text-primary); outline: none;" placeholder="# Write your Document Title here&#10;&#10;Use headings, bullet points, **bold**, *italic*, and even custom tables:&#10;&#10;| Feature | Availability |&#10;|---|---|&#10;| Client-side PDF | 100% Offline |&#10;| Premium Themes | Fully Integrated |"></textarea>
+                                </div>
+
+                                <!-- Live Preview Area -->
+                                <div class="preview-pane" style="flex: 1; display: flex; flex-direction: column; height: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: var(--bg-card); overflow: hidden;">
+                                    <div class="editor-toolbar" style="padding: 10px 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar);">
+                                        <span class="photo-count" style="font-size: 0.82rem; font-weight: 700;">HTML Live Preview</span>
+                                    </div>
+                                    <div class="page-sandbox-wrapper" style="padding: 20px; background-color: var(--bg-app); overflow-y: auto; height: calc(100% - 50px);">
+                                        <!-- Paper simulation for layout printing -->
+                                        <div class="page-container-mock margin-med font-inter" id="markdown-preview-container" style="min-height: auto; max-width: 100%; box-shadow: var(--shadow-md); padding: 40px;">
+                                            <div id="markdown-preview-html" class="notes-textarea" style="outline: none;">
+                                                <!-- Dynamic Markdown to HTML rendered content -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="markdown-settings-panel">
+                            <div class="settings-card">
+                                <h2>Document Layout</h2>
+                                <p class="card-desc text-secondary">Set styling options for PDF printing.</p>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="markdown-font">
+                                        <i data-lucide="type"></i> Typography Font
+                                    </label>
+                                    <select id="markdown-font" class="form-select">
+                                        <option value="font-inter" selected>Inter (Modern Sans)</option>
+                                        <option value="font-playfair">Playfair (Serif Editorial)</option>
+                                        <option value="font-outfit">Outfit (Clean Sans)</option>
+                                        <option value="font-mono">Fira Code (Monospace Technical)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="markdown-margin">
+                                        <i data-lucide="margin"></i> Document Margins
+                                    </label>
+                                    <select id="markdown-margin" class="form-select">
+                                        <option value="margin-small">Small Margins</option>
+                                        <option value="margin-med" selected>Medium Margins</option>
+                                        <option value="margin-large">Large Margins</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="book-open"></i> Sample Templates
+                                    </label>
+                                    <div class="templates-list" style="margin-top: 8px;">
+                                        <button class="template-item" id="template-md-resume">
+                                            <div class="template-icon"><i data-lucide="user"></i></div>
+                                            <div>
+                                                <h4>Professional Resume</h4>
+                                                <p>Sleek layout for job CV structures.</p>
+                                            </div>
+                                        </button>
+                                        <button class="template-item" id="template-md-memo" style="margin-top: 8px;">
+                                            <div class="template-icon"><i data-lucide="file-text"></i></div>
+                                            <div>
+                                                <h4>Business Memo</h4>
+                                                <p>Standardized document for internal notes.</p>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-markdown">
+                                    <i data-lucide="printer"></i> Export Document PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Active Loading / Generation Overlay -->
+    <div class="loader-overlay" id="loading-overlay">
+        <div class="loader-card">
+            <div class="spinner"></div>
+            <h3 id="loader-title">Generating PDF</h3>
+            <p class="text-secondary" id="loader-message">Processing images and assembling PDF. Please wait...</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <button class="nav-item active" data-target="dashboard-view">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-target="photos-view">
+            <i data-lucide="image"></i>
+            <span>Photos</span>
+        </button>
+        <button class="nav-item" data-target="notes-view">
+            <i data-lucide="edit-3"></i>
+            <span>Notes</span>
+        </button>
+        <button class="nav-item" data-target="edit-view">
+            <i data-lucide="file-signature"></i>
+            <span>Edit</span>
+        </button>
+    </nav>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+</body>
+</html>
