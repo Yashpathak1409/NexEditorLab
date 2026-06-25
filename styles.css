@@ -1510,6 +1510,23 @@ body.light-theme .moon-icon {
     min-height: 100%;
 }
 
+/* Avoid splitting text elements across pages */
+.notes-textarea p,
+.notes-textarea h1,
+.notes-textarea h2,
+.notes-textarea h3,
+.notes-textarea h4,
+.notes-textarea h5,
+.notes-textarea h6,
+.notes-textarea tr,
+.notes-textarea li,
+.notes-textarea hr,
+.notes-textarea pre,
+.notes-textarea blockquote {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+}
+
 /* Styling rich elements inside notes page editor */
 .notes-textarea h1 {
     font-family: inherit;

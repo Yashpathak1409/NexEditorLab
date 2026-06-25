@@ -1106,7 +1106,7 @@ let mergeSortable = null;
                 format: pageFormatOption, 
                 orientation: 'portrait' 
             },
-            pagebreak: { mode: ['css', 'legacy'] }
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
         };
 
         // Render PDF flow
@@ -3678,7 +3678,8 @@ All systems have compiled successfully. No security or script regressions detect
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             // Temporarily hide page break indicators before saving
