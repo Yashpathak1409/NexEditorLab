@@ -37,7 +37,7 @@
     <!-- marked (Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- App Logic script -->
-  <script type="module" crossorigin src="/assets/index-DJqmZGZL.js"></script>
+  <script type="module" crossorigin src="/assets/index-IjFT7abi.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-D_Y_Svd6.css">
 </head>
 
@@ -1543,6 +1543,9 @@
                                         <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('\n| Column 1 | Column 2 |\n|---|---|\n| Row 1 | Row 1 |\n| Row 2 | Row 2 |\n')" title="Insert Table" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="table" style="width: 11px; height: 11px;"></i> Table</button>
                                         <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('\n---\n')" title="Insert Horizontal Line" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="minus" style="width: 11px; height: 11px;"></i> Line</button>
                                         <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('- ')" title="Bullet List" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center;"><i data-lucide="list" style="width: 11px; height: 11px;"></i></button>
+                                        <button type="button" id="btn-compile-markdown" class="btn btn-sm" title="Compile Markdown Preview" style="padding: 3px 8px; font-size: 0.72rem; font-weight: 700; background: var(--accent); border: none; border-radius: 4px; color: #ffffff; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; margin-left: auto;">
+                                            <i data-lucide="play" style="width: 10px; height: 10px; fill: currentColor;"></i> Compile
+                                        </button>
                                     </div>
                                     <textarea id="markdown-textarea" class="form-input"
                                         style="flex-grow: 1; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.6; padding: 20px; resize: none; border: none; width: 100%; height: calc(100% - 50px); background-color: var(--bg-sidebar); color: var(--text-primary); outline: none;"

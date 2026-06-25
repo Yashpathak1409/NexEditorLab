@@ -3275,6 +3275,7 @@ let mergeSortable = null;
     const markdownFontSelect = document.getElementById('markdown-font');
     const markdownMarginSelect = document.getElementById('markdown-margin');
     const btnRunMarkdown = document.getElementById('btn-run-markdown');
+    const btnCompileMarkdown = document.getElementById('btn-compile-markdown');
     
     // Sample Templates Triggers
     const templateResume = document.getElementById('template-md-resume');
@@ -3364,14 +3365,13 @@ All systems have compiled successfully. No security or script regressions detect
     // Initialize markdown editor template on load
     if (markdownTextarea) {
         markdownTextarea.value = sampleMemoMD;
-        updateMarkdownPreview();
-        updateMarkdownStyles();
+        compileMarkdown();
         
         // Debounce preview update
         let debounceTimer;
         markdownTextarea.addEventListener('input', () => {
             clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(updateMarkdownPreview, 150);
+            debounceTimer = setTimeout(() => compileMarkdown(), 150);
         });
     }
 
@@ -3380,6 +3380,7 @@ All systems have compiled successfully. No security or script regressions detect
             // Remove previous font classes
             markdownPreviewContainer.classList.remove('font-inter', 'font-playfair', 'font-outfit', 'font-mono');
             markdownPreviewContainer.classList.add(e.target.value);
+            compileMarkdown();
         });
     }
 
@@ -3388,6 +3389,7 @@ All systems have compiled successfully. No security or script regressions detect
             // Remove previous margin classes
             markdownPreviewContainer.classList.remove('margin-small', 'margin-med', 'margin-large');
             markdownPreviewContainer.classList.add(e.target.value);
+            compileMarkdown();
         });
     }
 
@@ -3477,19 +3479,108 @@ All systems have compiled successfully. No security or script regressions detect
                 if (headerSettingsGroup) headerSettingsGroup.style.display = 'none';
             }
         }
+
+        // Divider Lines (hr)
+        const dividerColorSelect = document.getElementById('markdown-divider-color');
+        const dividerThicknessSelect = document.getElementById('markdown-divider-thickness');
+        const hrElements = previewContainer.querySelectorAll('#markdown-preview-html hr');
+        
+        if (hrElements.length > 0) {
+            let hrColor = '#e2e8f0'; // default grey
+            let hrThickness = '1px'; // default
+            
+            if (dividerColorSelect && dividerColorSelect.value !== 'default') {
+                if (dividerColorSelect.value === 'match') {
+                    hrColor = (accentColorSelect && accentColorSelect.value !== 'none') ? activeAccentColor : '#10b981';
+                } else {
+                    hrColor = dividerColorSelect.value;
+                }
+            }
+            if (dividerThicknessSelect) {
+                hrThickness = dividerThicknessSelect.value;
+            }
+            
+            hrElements.forEach(hr => {
+                hr.style.border = 'none';
+                hr.style.height = hrThickness;
+                hr.style.backgroundColor = hrColor;
+                hr.style.borderRadius = parseInt(hrThickness) > 2 ? '2px' : '0px';
+            });
+        }
+    }
+
+    function renderPageBreakIndicators() {
+        const previewContainer = document.getElementById('markdown-preview-container');
+        if (!previewContainer) return;
+        
+        // Remove existing page-break indicators
+        const existingIndicators = previewContainer.querySelectorAll('.page-break-indicator');
+        existingIndicators.forEach(el => el.remove());
+        
+        // Letter format aspect ratio: 11 / 8.5
+        const width = previewContainer.offsetWidth || 700;
+        const pageHeight = Math.round(width * (11 / 8.5));
+        
+        const containerHeight = previewContainer.scrollHeight;
+        const pagesCount = Math.ceil(containerHeight / pageHeight);
+        
+        // Render dashed lines at page boundaries
+        for (let i = 1; i < pagesCount; i++) {
+            const topPos = i * pageHeight;
+            const indicator = document.createElement('div');
+            indicator.className = 'page-break-indicator';
+            indicator.style.position = 'absolute';
+            indicator.style.left = '0';
+            indicator.style.right = '0';
+            indicator.style.top = `${topPos}px`;
+            indicator.style.borderTop = '2px dashed #f43f5e';
+            indicator.style.zIndex = '10';
+            indicator.style.pointerEvents = 'none';
+            indicator.style.margin = '0';
+            indicator.style.padding = '0';
+            
+            // Label tag on the right side
+            const label = document.createElement('span');
+            label.textContent = `Page ${i} / Page ${i + 1} Split`;
+            label.style.position = 'absolute';
+            label.style.right = '10px';
+            label.style.top = '-10px';
+            label.style.backgroundColor = '#f43f5e';
+            label.style.color = '#ffffff';
+            label.style.fontSize = '0.65rem';
+            label.style.fontWeight = '700';
+            label.style.padding = '2px 6px';
+            label.style.borderRadius = '3px';
+            label.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            
+            indicator.appendChild(label);
+            previewContainer.appendChild(indicator);
+        }
+    }
+
+    function compileMarkdown(showSuccessToast = false) {
+        updateMarkdownPreview();
+        updateMarkdownStyles();
+        // Give a tiny timeout for DOM rendering, then draw page breaks
+        setTimeout(renderPageBreakIndicators, 50);
+        
+        if (showSuccessToast) {
+            showToast('Document compiled successfully!', 'success');
+        }
     }
 
     // Bind styling listeners
     const markdownStyleControls = [
         'markdown-font-size', 'markdown-line-spacing', 'markdown-accent-color', 
         'markdown-accent-thickness', 'markdown-enable-header', 'markdown-header-name', 
-        'markdown-header-color', 'markdown-header-details'
+        'markdown-header-color', 'markdown-header-details',
+        'markdown-divider-color', 'markdown-divider-thickness'
     ];
     markdownStyleControls.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-            el.addEventListener('change', updateMarkdownStyles);
-            el.addEventListener('input', updateMarkdownStyles);
+            el.addEventListener('change', () => compileMarkdown());
+            el.addEventListener('input', () => compileMarkdown());
         }
     });
 
@@ -3507,16 +3598,21 @@ All systems have compiled successfully. No security or script regressions detect
         markdownTextarea.selectionStart = start + prefix.length;
         markdownTextarea.selectionEnd = start + prefix.length + selected.length;
         
-        updateMarkdownPreview();
+        compileMarkdown();
     };
+
+    if (btnCompileMarkdown) {
+        btnCompileMarkdown.addEventListener('click', () => {
+            compileMarkdown(true);
+        });
+    }
 
     if (templateResume) {
         templateResume.addEventListener('click', () => {
             markdownTextarea.value = sampleResumeMD;
             const enableHeaderCheck = document.getElementById('markdown-enable-header');
             if (enableHeaderCheck) enableHeaderCheck.checked = false;
-            updateMarkdownStyles();
-            updateMarkdownPreview();
+            compileMarkdown();
             showToast('Resume template loaded.', 'success');
         });
     }
@@ -3526,8 +3622,7 @@ All systems have compiled successfully. No security or script regressions detect
             markdownTextarea.value = sampleMemoMD;
             const enableHeaderCheck = document.getElementById('markdown-enable-header');
             if (enableHeaderCheck) enableHeaderCheck.checked = false;
-            updateMarkdownStyles();
-            updateMarkdownPreview();
+            compileMarkdown();
             showToast('Business Memo template loaded.', 'success');
         });
     }
@@ -3557,8 +3652,7 @@ All systems have compiled successfully. No security or script regressions detect
                 headerDetailsInput.value = `EC-66, Chandanvan\nMathura 281001\n(91) 9761444113, 8979744113\nGSTIN : 09AALCC5515C1ZT`;
             }
             
-            updateMarkdownStyles();
-            updateMarkdownPreview();
+            compileMarkdown();
             showToast('Project Proposal template loaded with letterhead.', 'success');
         });
     }
@@ -3587,15 +3681,23 @@ All systems have compiled successfully. No security or script regressions detect
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
 
+            // Temporarily hide page break indicators before saving
+            const indicators = markdownPreviewContainer.querySelectorAll('.page-break-indicator');
+            indicators.forEach(el => el.style.display = 'none');
+
             // Use html2pdf bundles (already present in page context)
             html2pdf().from(markdownPreviewContainer).set(opt).save()
                 .then(() => {
+                    // Restore indicators
+                    indicators.forEach(el => el.style.display = 'block');
                     showToast('Document printed successfully!', 'success');
                     const mdFontSelect = document.getElementById('markdown-font');
                     const selectedFont = mdFontSelect ? mdFontSelect.value : 'font-inter';
                     trackAppEvent('compile_markdown_pdf', { font: selectedFont });
                 })
                 .catch(err => {
+                    // Restore indicators
+                    indicators.forEach(el => el.style.display = 'block');
                     console.error(err);
                     showToast('Failed to compile Markdown PDF.', 'error');
                 })
