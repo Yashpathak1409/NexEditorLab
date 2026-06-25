@@ -37,7 +37,7 @@
     <!-- marked (Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- App Logic script -->
-  <script type="module" crossorigin src="/assets/index-CDcxsM-f.js"></script>
+  <script type="module" crossorigin src="/assets/index-DJqmZGZL.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-D_Y_Svd6.css">
 </head>
 
@@ -1531,13 +1531,18 @@
                                 <div class="editor-pane"
                                     style="flex: 1; display: flex; flex-direction: column; height: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-md); background-color: var(--bg-card); overflow: hidden;">
                                     <div class="editor-toolbar"
-                                        style="padding: 10px 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar); display: flex; justify-content: space-between; align-items: center;">
-                                        <span class="photo-count" style="font-size: 0.82rem; font-weight: 700;">Markdown
-                                            Editor</span>
-                                        <div class="toolbar-group" style="border: none; background: transparent;">
-                                            <span style="font-size: 0.72rem; color: var(--text-muted);">Supports
-                                                Standard Markdown</span>
-                                        </div>
+                                        style="padding: 8px 16px; border-bottom: 1px solid var(--border-color); background-color: var(--bg-sidebar); display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                        <span class="photo-count" style="font-size: 0.82rem; font-weight: 700; margin-right: 8px;">Markdown Editor</span>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('# ')" title="Heading 1" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; font-weight: 600;">H1</button>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('## ')" title="Heading 2" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; font-weight: 600;">H2</button>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('### ')" title="Heading 3" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; font-weight: 600;">H3</button>
+                                        <div style="width: 1px; height: 14px; background-color: var(--border-color); margin: 0 2px;"></div>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('**', '**')" title="Bold" style="padding: 2px 6px; font-size: 0.75rem; font-weight: bold; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer;">B</button>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('*', '*')" title="Italic" style="padding: 2px 6px; font-size: 0.75rem; font-style: italic; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer;">I</button>
+                                        <div style="width: 1px; height: 14px; background-color: var(--border-color); margin: 0 2px;"></div>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('\n| Column 1 | Column 2 |\n|---|---|\n| Row 1 | Row 1 |\n| Row 2 | Row 2 |\n')" title="Insert Table" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="table" style="width: 11px; height: 11px;"></i> Table</button>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('\n---\n')" title="Insert Horizontal Line" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><i data-lucide="minus" style="width: 11px; height: 11px;"></i> Line</button>
+                                        <button type="button" class="btn btn-sm btn-icon toolbar-btn" onclick="insertMarkdown('- ')" title="Bullet List" style="padding: 2px 6px; font-size: 0.75rem; background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-primary); cursor: pointer; display: inline-flex; align-items: center;"><i data-lucide="list" style="width: 11px; height: 11px;"></i></button>
                                     </div>
                                     <textarea id="markdown-textarea" class="form-input"
                                         style="flex-grow: 1; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.6; padding: 20px; resize: none; border: none; width: 100%; height: calc(100% - 50px); background-color: var(--bg-sidebar); color: var(--text-primary); outline: none;"
@@ -1557,9 +1562,22 @@
                                         <!-- Paper simulation for layout printing -->
                                         <div class="page-container-mock margin-med font-inter"
                                             id="markdown-preview-container"
-                                            style="min-height: auto; max-width: 100%; box-shadow: var(--shadow-md); padding: 40px;">
+                                            style="min-height: auto; max-width: 100%; box-shadow: var(--shadow-md); padding: 40px; display: flex; flex-direction: column;">
+                                            
+                                            <!-- Top Accent Line -->
+                                            <div id="markdown-top-accent" style="height: 8px; background-color: #10b981; margin-bottom: 24px; width: 100%; border-radius: 2px;"></div>
+
+                                            <!-- Letterhead Header Block -->
+                                            <div id="markdown-header-block" style="display: none; margin-bottom: 24px; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 20px; text-align: left; width: 100%;">
+                                                <div id="markdown-header-company" style="font-size: 1.4rem; font-weight: 800; color: #10b981; margin-bottom: 6px; font-family: inherit;">CyPassion Technologies Private Limited</div>
+                                                <div id="markdown-header-info" style="font-size: 0.82rem; color: #64748b; line-height: 1.55; white-space: pre-line; font-family: inherit;">EC-66, Chandanvan
+Mathura 281001
+(91) 9761444113, 8979744113
+GSTIN : 09AALCC5515C1ZT</div>
+                                            </div>
+
                                             <div id="markdown-preview-html" class="notes-textarea"
-                                                style="outline: none;">
+                                                style="outline: none; flex-grow: 1;">
                                                 <!-- Dynamic Markdown to HTML rendered content -->
                                             </div>
                                         </div>
@@ -1598,6 +1616,91 @@
                                 </div>
 
                                 <div class="settings-group">
+                                    <label class="settings-label" for="markdown-font-size">
+                                        <i data-lucide="text-cursor-input"></i> Base Font Size
+                                    </label>
+                                    <select id="markdown-font-size" class="form-select">
+                                        <option value="13px">Small (13px)</option>
+                                        <option value="15px" selected>Normal (15px)</option>
+                                        <option value="18px">Large (18px)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="markdown-line-spacing">
+                                        <i data-lucide="align-justify"></i> Line Spacing
+                                    </label>
+                                    <select id="markdown-line-spacing" class="form-select">
+                                        <option value="1.15">Single (1.15)</option>
+                                        <option value="1.5" selected>Normal (1.5)</option>
+                                        <option value="2.0">Double (2.0)</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="markdown-accent-color">
+                                        <i data-lucide="paint-bucket"></i> Top Accent Line
+                                    </label>
+                                    <select id="markdown-accent-color" class="form-select">
+                                        <option value="none">None</option>
+                                        <option value="#10b981" selected>Emerald Green</option>
+                                        <option value="#3b82f6">Royal Blue</option>
+                                        <option value="#f97316">Warm Orange</option>
+                                        <option value="#ef4444">Crimson Red</option>
+                                        <option value="#eab308">Elegant Gold</option>
+                                        <option value="#374151">Charcoal</option>
+                                    </select>
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label" for="markdown-accent-thickness">
+                                        <i data-lucide="line-chart"></i> Line Thickness
+                                    </label>
+                                    <select id="markdown-accent-thickness" class="form-select">
+                                        <option value="3px">Thin (3px)</option>
+                                        <option value="6px">Medium (6px)</option>
+                                        <option value="10px" selected>Thick (10px)</option>
+                                        <option value="15px">Extra Thick (15px)</option>
+                                    </select>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-group checkbox-wrapper">
+                                    <input type="checkbox" id="markdown-enable-header" class="form-checkbox">
+                                    <label for="markdown-enable-header" class="checkbox-label">
+                                        <span>Enable Letterhead Header</span>
+                                        <span class="sub-text text-secondary">Appends company branding at the top</span>
+                                    </label>
+                                </div>
+
+                                <div id="markdown-header-settings-group" style="display: none; margin-top: 12px; border-left: 2px solid var(--border-color); padding-left: 12px;">
+                                    <div class="settings-group">
+                                        <label class="settings-label" for="markdown-header-name">Company Name</label>
+                                        <input type="text" id="markdown-header-name" class="form-input" value="CyPassion Technologies Private Limited" placeholder="Enter company name...">
+                                    </div>
+                                    <div class="settings-group">
+                                        <label class="settings-label" for="markdown-header-color">Company Name Color</label>
+                                        <select id="markdown-header-color" class="form-select">
+                                            <option value="match" selected>Match Accent Color</option>
+                                            <option value="#111827">Dark Charcoal</option>
+                                            <option value="#10b981">Emerald Green</option>
+                                            <option value="#3b82f6">Royal Blue</option>
+                                            <option value="#f97316">Warm Orange</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-group">
+                                        <label class="settings-label" for="markdown-header-details">Header Address & Info</label>
+                                        <textarea id="markdown-header-details" class="form-input" style="height: 100px; resize: vertical; font-family: sans-serif; font-size: 0.8rem;" placeholder="Enter address, tax info, numbers...">EC-66, Chandanvan
+Mathura 281001
+(91) 9761444113, 8979744113
+GSTIN : 09AALCC5515C1ZT</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <div class="settings-group">
                                     <label class="settings-label">
                                         <i data-lucide="book-open"></i> Sample Templates
                                     </label>
@@ -1614,6 +1717,13 @@
                                             <div>
                                                 <h4>Business Memo</h4>
                                                 <p>Standardized document for internal notes.</p>
+                                            </div>
+                                        </button>
+                                        <button class="template-item" id="template-md-proposal" style="margin-top: 8px;">
+                                            <div class="template-icon"><i data-lucide="file-check"></i></div>
+                                            <div>
+                                                <h4>Project Proposal</h4>
+                                                <p>Branded letterhead proposal document.</p>
                                             </div>
                                         </button>
                                     </div>
