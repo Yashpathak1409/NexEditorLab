@@ -3426,7 +3426,7 @@ let mergeSortable = null;
             
             hrElements.forEach(hr => {
                 hr.style.border = 'none';
-                hr.style.height = hrThickness;
+                    hr.style.height = hrThickness;
                 hr.style.backgroundColor = hrColor;
                 hr.style.borderRadius = parseInt(hrThickness) > 2 ? '2px' : '0px';
             });
@@ -3447,6 +3447,10 @@ let mergeSortable = null;
         // Letter format aspect ratio: 11 / 8.5
         const width = previewContainer.offsetWidth;
         const pageHeight = Math.round(width * (11 / 8.5));
+        
+        // Set the height of the mock page container dynamically
+        previewContainer.style.minHeight = `${pageHeight}px`;
+        previewContainer.style.height = `${pageHeight}px`;
         
         // Render boundary indicator at the exact bottom of the page
         const indicator = document.createElement('div');
@@ -3488,9 +3492,14 @@ let mergeSortable = null;
         
         const width = previewContainer.offsetWidth;
         const pageHeight = Math.round(width * (11 / 8.5));
+        
+        // Force dynamic height settings before measuring scrollHeight to override CSS min-height: 800px
+        previewContainer.style.minHeight = `${pageHeight}px`;
+        previewContainer.style.height = `${pageHeight}px`;
+        
         const containerHeight = previewContainer.scrollHeight;
         
-        if (containerHeight > pageHeight) {
+        if (containerHeight > pageHeight + 4) { // add 4px tolerance for sub-pixel differences
             // Revert value
             markdownTextarea.value = lastValidMarkdown;
             // Compile again to sync preview back to the last valid state
