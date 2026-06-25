@@ -109,6 +109,10 @@
                     <i data-lucide="layers"></i>
                     <span>PDF Page Organizer</span>
                 </button>
+                <button class="nav-item" id="nav-merge" data-target="merge-view">
+                    <i data-lucide="git-merge"></i>
+                    <span>PDF Merger</span>
+                </button>
                 <button class="nav-item" id="nav-pdf-to-img" data-target="pdf-to-image-view">
                     <i data-lucide="file-image"></i>
                     <span>PDF to Image</span>
@@ -244,6 +248,15 @@
                             <p>Merge multiple PDFs, split documents, delete pages, or drag-and-drop pages to reorder
                                 them completely offline.</p>
                             <span class="tool-btn">Open Organizer Workspace <i data-lucide="arrow-right"></i></span>
+                        </div>
+
+                        <div class="tool-card" id="card-merge">
+                            <div class="tool-icon-box merge-gradient">
+                                <i data-lucide="git-merge"></i>
+                            </div>
+                            <h3>PDF Merger</h3>
+                            <p>Combine up to 20 PDF files into a single document in any order. Drag-and-drop to reorder files easily.</p>
+                            <span class="tool-btn">Open Merger Workspace <i data-lucide="arrow-right"></i></span>
                         </div>
 
                         <div class="tool-card" id="card-pdf-to-img">
@@ -1163,6 +1176,87 @@
 
                                 <button class="btn btn-action btn-block" id="btn-run-organizer" disabled>
                                     <i data-lucide="file-check"></i> Export Compiled PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PDF MERGER VIEW -->
+                <section id="merge-view" class="view-panel">
+                    <!-- Mobile Workspace Switcher -->
+                    <div class="mobile-workspace-tabs">
+                        <button class="mobile-tab-btn active" data-tab-target="merge-work-panel">
+                            <i data-lucide="git-merge"></i> Workspace
+                        </button>
+                        <button class="mobile-tab-btn" data-tab-target="merge-settings-panel">
+                            <i data-lucide="sliders"></i> Options
+                        </button>
+                    </div>
+
+                    <div class="workspace-layout">
+                        <div class="workspace-main" id="merge-work-panel">
+                            <input type="file" id="merge-file-input" multiple accept="application/pdf"
+                                style="display: none;">
+                            <div class="upload-zone" id="merge-drop-zone">
+                                <div class="upload-zone-content">
+                                    <div class="upload-icon-circle">
+                                        <i data-lucide="git-merge" class="upload-icon"></i>
+                                    </div>
+                                    <h3>Drag & drop PDF files here to Merge</h3>
+                                    <p class="text-secondary">Upload up to 20 PDF files. Combine them offline in any order.</p>
+                                    <button class="btn btn-primary btn-merge-upload-trigger">
+                                        <i data-lucide="plus"></i> Browse PDFs
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- File list manager -->
+                            <div id="merge-manager" style="display: none; width: 100%;">
+                                <div class="manager-header"
+                                    style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                    <span class="photo-count" id="merge-files-count">0 Files Loaded</span>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button class="btn btn-primary btn-sm btn-merge-upload-trigger" id="btn-add-more-merge">
+                                            <i data-lucide="plus"></i> Add More
+                                        </button>
+                                        <button class="btn btn-danger-outline btn-sm" id="btn-clear-merge">
+                                            <i data-lucide="trash-2"></i> Clear All
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="merge-list-container" id="merge-list" style="margin-top: 10px;">
+                                    <!-- Dynamic file cards will go here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Settings Panel -->
+                        <div class="workspace-sidebar" id="merge-settings-panel">
+                            <div class="settings-card">
+                                <h2>Merge Options</h2>
+                                <p class="card-desc text-secondary">Configure final document output.</p>
+
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="file-text"></i> Output Filename
+                                    </label>
+                                    <input type="text" id="merge-filename" class="form-input" value="merged_document.pdf" placeholder="Enter output name...">
+                                </div>
+
+                                <div class="settings-group">
+                                    <label class="settings-label">
+                                        <i data-lucide="info"></i> Quick Instructions
+                                    </label>
+                                    <div class="range-hint" style="margin-top: 6px; line-height: 1.4;">
+                                        Drag files in the list to reorder the merging sequence. Click the delete icon on a card to remove that file from the merge queue. Max limit is 20 files.
+                                    </div>
+                                </div>
+
+                                <div class="divider"></div>
+
+                                <button class="btn btn-action btn-block" id="btn-run-merge" disabled>
+                                    <i data-lucide="git-merge"></i> Merge PDFs
                                 </button>
                             </div>
                         </div>

@@ -13,6 +13,8 @@ let organizerFilesMap = new Map(); // map of fileId -> ArrayBuffer
 let organizerSortable = null;
 let currentPdfToImgFile = null;
 let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: string, arrayBuffer: ArrayBuffer }
+let mergeQueue = []; // elements: { id: string, name: string, size: string, pages: number, arrayBuffer: ArrayBuffer }
+let mergeSortable = null;
 
     // --- DOM REFERENCES ---
     const body = document.body;
@@ -31,6 +33,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
     const cardPhotoCompress = document.getElementById('card-photo-compress');
     const cardPhotoResize = document.getElementById('card-photo-resize');
     const cardOrganizer = document.getElementById('card-organizer');
+    const cardMerge = document.getElementById('card-merge');
     const cardPdfToImg = document.getElementById('card-pdf-to-img');
     const cardOcr = document.getElementById('card-ocr');
     const cardMarkdown = document.getElementById('card-markdown');
@@ -147,6 +150,9 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
         } else if (targetViewId === 'organizer-view') {
             viewTitle.textContent = 'PDF Page Organizer';
             viewSubtitle.textContent = 'Merge multiple PDFs, split documents, and reorder pages offline.';
+        } else if (targetViewId === 'merge-view') {
+            viewTitle.textContent = 'PDF Merger';
+            viewSubtitle.textContent = 'Combine up to 20 PDF documents in any order locally.';
         } else if (targetViewId === 'pdf-to-image-view') {
             viewTitle.textContent = 'PDF to Image Converter';
             viewSubtitle.textContent = 'Convert PDF pages into high-resolution JPG/PNG/WebP images locally.';
@@ -174,6 +180,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
     if (cardPhotoCompress) cardPhotoCompress.addEventListener('click', () => switchView('photo-compress-view'));
     if (cardPhotoResize) cardPhotoResize.addEventListener('click', () => switchView('photo-resize-view'));
     if (cardOrganizer) cardOrganizer.addEventListener('click', () => switchView('organizer-view'));
+    if (cardMerge) cardMerge.addEventListener('click', () => switchView('merge-view'));
     if (cardPdfToImg) cardPdfToImg.addEventListener('click', () => switchView('pdf-to-image-view'));
     if (cardOcr) cardOcr.addEventListener('click', () => switchView('ocr-view'));
     if (cardMarkdown) cardMarkdown.addEventListener('click', () => switchView('markdown-view'));
@@ -1948,8 +1955,6 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                     const compressedName = 'compressed_' + compressPdfFile.name;
                     outDoc.save(compressedName);
                     showToast('PDF compressed and downloaded successfully!', 'success');
-                    const compLevelSelect = document.getElementById('compress-level');
-                    const level = compLevelSelect ? compLevelSelect.value : 'medium';
                     trackAppEvent('compress_pdf', { level: level });
                 } catch (err) {
                     console.error(err);
@@ -3318,6 +3323,271 @@ All systems have compiled successfully. No security or script regressions detect
                 .finally(() => {
                     hideLoader();
                 });
+        });
+    }
+
+    // ==========================================================================
+    // --- 13. PDF MERGER WORKSPACE LOGIC ---
+    // ==========================================================================
+    const mergeFileInput = document.getElementById('merge-file-input');
+    const mergeDropZone = document.getElementById('merge-drop-zone');
+    const mergeManager = document.getElementById('merge-manager');
+    const mergeList = document.getElementById('merge-list');
+    const mergeFilesCount = document.getElementById('merge-files-count');
+    const btnClearMerge = document.getElementById('btn-clear-merge');
+    const btnRunMerge = document.getElementById('btn-run-merge');
+    const mergeUploadTriggerBtns = document.querySelectorAll('.btn-merge-upload-trigger');
+    const mergeFilenameInput = document.getElementById('merge-filename');
+
+    if (mergeUploadTriggerBtns) {
+        mergeUploadTriggerBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (mergeFileInput) mergeFileInput.click();
+            });
+        });
+    }
+
+    if (mergeFileInput) {
+        mergeFileInput.addEventListener('change', (e) => {
+            handleMergeFiles(e.target.files);
+        });
+    }
+
+    if (mergeDropZone) {
+        mergeDropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            mergeDropZone.classList.add('dragover');
+        });
+        mergeDropZone.addEventListener('dragleave', () => {
+            mergeDropZone.classList.remove('dragover');
+        });
+        mergeDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            mergeDropZone.classList.remove('dragover');
+            handleMergeFiles(e.dataTransfer.files);
+        });
+    }
+
+    if (btnClearMerge) {
+        btnClearMerge.addEventListener('click', () => {
+            mergeQueue = [];
+            if (mergeSortable) {
+                mergeSortable.destroy();
+                mergeSortable = null;
+            }
+            if (mergeList) mergeList.innerHTML = '';
+            if (mergeManager) mergeManager.style.display = 'none';
+            if (mergeDropZone) mergeDropZone.style.display = 'flex';
+            if (btnRunMerge) btnRunMerge.disabled = true;
+            if (mergeFileInput) mergeFileInput.value = '';
+            showToast('Merge queue cleared.', 'info');
+        });
+    }
+
+    async function handleMergeFiles(files) {
+        const pdfFiles = Array.from(files).filter(f => f.type === 'application/pdf');
+        if (pdfFiles.length === 0) {
+            showToast('Please upload valid PDF files.', 'error');
+            return;
+        }
+
+        let addedCount = 0;
+        let limitReached = false;
+
+        showLoader('Loading PDFs', 'Reading document metadata...');
+        
+        for (let i = 0; i < pdfFiles.length; i++) {
+            if (mergeQueue.length >= 20) {
+                limitReached = true;
+                break;
+            }
+            
+            const file = pdfFiles[i];
+            const id = 'merge-file-' + Date.now() + '-' + Math.round(Math.random() * 1000);
+            
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // Get page count using PDFLib
+                const doc = await PDFLib.PDFDocument.load(arrayBuffer);
+                const pageCount = doc.getPageCount();
+                const fileSizeStr = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+                
+                mergeQueue.push({
+                    id: id,
+                    name: file.name,
+                    size: fileSizeStr,
+                    pages: pageCount,
+                    arrayBuffer: arrayBuffer
+                });
+                
+                addedCount++;
+            } catch (err) {
+                console.error(err);
+                showToast(`Failed to load ${file.name}`, 'error');
+            }
+        }
+
+        hideLoader();
+        
+        if (addedCount > 0) {
+            showToast(`Added ${addedCount} PDF file(s) to merge list.`, 'success');
+        }
+        
+        if (limitReached) {
+            showToast('Maximum limit of 20 PDF files reached. Excess files skipped.', 'warning');
+        }
+
+        if (mergeFileInput) mergeFileInput.value = '';
+        renderMergeList();
+    }
+
+    function renderMergeList() {
+        if (!mergeList) return;
+        mergeList.innerHTML = '';
+        
+        if (mergeQueue.length === 0) {
+            if (mergeManager) mergeManager.style.display = 'none';
+            if (mergeDropZone) mergeDropZone.style.display = 'flex';
+            if (btnRunMerge) btnRunMerge.disabled = true;
+            return;
+        }
+
+        if (mergeDropZone) mergeDropZone.style.display = 'none';
+        if (mergeManager) mergeManager.style.display = 'block';
+        if (btnRunMerge) btnRunMerge.disabled = mergeQueue.length < 2;
+
+        if (mergeFilesCount) {
+            mergeFilesCount.textContent = `${mergeQueue.length} ${mergeQueue.length === 1 ? 'File' : 'Files'} Loaded (Max 20)`;
+        }
+
+        mergeQueue.forEach((file, idx) => {
+            const card = document.createElement('div');
+            card.className = 'merge-file-card';
+            card.setAttribute('data-id', file.id);
+
+            card.innerHTML = `
+                <div class="drag-handle" title="Drag to reorder">
+                    <i data-lucide="grip-vertical"></i>
+                </div>
+                <div class="file-badge">${idx + 1}</div>
+                <div class="file-icon">
+                    <i data-lucide="file-text"></i>
+                </div>
+                <div class="file-info">
+                    <div class="file-name" title="${file.name}">${file.name}</div>
+                    <div class="file-meta">
+                        <span>${file.size}</span>
+                        <div class="file-meta-dot"></div>
+                        <span>${file.pages} ${file.pages === 1 ? 'page' : 'pages'}</span>
+                    </div>
+                </div>
+                <button class="btn-delete-file" title="Remove file">
+                    <i data-lucide="trash-2"></i>
+                </button>
+            `;
+
+            // Attach delete handler
+            card.querySelector('.btn-delete-file').addEventListener('click', (e) => {
+                e.stopPropagation();
+                mergeQueue = mergeQueue.filter(f => f.id !== file.id);
+                renderMergeList();
+                showToast('File removed from merge queue.', 'info');
+            });
+
+            mergeList.appendChild(card);
+        });
+
+        lucide.createIcons();
+
+        // Setup SortableJS for drag-and-drop reordering of files
+        if (mergeSortable) {
+            mergeSortable.destroy();
+        }
+
+        mergeSortable = new Sortable(mergeList, {
+            animation: 200,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            chosenClass: 'sortable-chosen',
+            onEnd: () => {
+                // Sync queue array with new DOM order
+                const reordered = [];
+                const cards = mergeList.querySelectorAll('.merge-file-card');
+                cards.forEach((card, newIdx) => {
+                    const id = card.getAttribute('data-id');
+                    const fileObj = mergeQueue.find(f => f.id === id);
+                    if (fileObj) reordered.push(fileObj);
+                    
+                    // Update index badges in DOM directly
+                    card.querySelector('.file-badge').textContent = newIdx + 1;
+                });
+                mergeQueue = reordered;
+            }
+        });
+    }
+
+    if (btnRunMerge) {
+        btnRunMerge.addEventListener('click', async () => {
+            if (mergeQueue.length < 2) {
+                showToast('Please add at least 2 PDF files to merge.', 'error');
+                return;
+            }
+
+            let filename = mergeFilenameInput ? mergeFilenameInput.value.trim() : 'merged_document.pdf';
+            if (!filename) filename = 'merged_document.pdf';
+            if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
+            showLoader('Merging PDFs', 'Initializing compilation...');
+            
+            try {
+                // Create output PDF
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                
+                for (let i = 0; i < mergeQueue.length; i++) {
+                    const file = mergeQueue[i];
+                    updateLoaderProgress(Math.round((i / mergeQueue.length) * 100));
+                    loaderMessage.textContent = `Merging file ${i + 1} of ${mergeQueue.length}: ${file.name}`;
+                    
+                    // Load the document bytes
+                    const doc = await PDFLib.PDFDocument.load(file.arrayBuffer);
+                    
+                    // Copy all pages
+                    const pagesToCopy = Array.from({ length: doc.getPageCount() }, (_, index) => index);
+                    const copiedPages = await mergedPdf.copyPages(doc, pagesToCopy);
+                    
+                    // Append pages to target doc
+                    copiedPages.forEach(page => {
+                        mergedPdf.addPage(page);
+                    });
+                }
+                
+                updateLoaderProgress(95);
+                loaderMessage.textContent = 'Saving merged document...';
+                await new Promise(r => setTimeout(r, 100)); // micro-sleep for progress animation
+                
+                const finalBytes = await mergedPdf.save();
+                const blob = new Blob([finalBytes], { type: 'application/pdf' });
+                const downloadUrl = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(downloadUrl);
+                
+                updateLoaderProgress(100);
+                showToast('PDFs merged successfully!', 'success');
+                trackAppEvent('merge_pdfs', { totalFiles: mergeQueue.length });
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to merge PDF files.', 'error');
+            } finally {
+                hideLoader();
+            }
         });
     }
 
