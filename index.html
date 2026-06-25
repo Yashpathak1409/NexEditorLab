@@ -43,7 +43,10 @@
 
 <body class="dark-theme">
     <!-- Mobile Header -->
-    <header class="mobile-header">
+    <header class="mobile-header" style="gap: 12px;">
+        <button id="mobile-back-btn" class="theme-toggle-btn-mobile" style="display: none; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--radius-sm); background-color: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer;" aria-label="Back to dashboard">
+            <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+        </button>
         <div class="logo-area">
             <div class="logo-icon-wrapper">
                 <i data-lucide="file-text" class="logo-icon"></i>
@@ -150,10 +153,15 @@
         <main class="main-content">
             <!-- Top bar -->
             <header class="top-header">
-                <div class="header-title-area">
-                    <h1 id="view-title">Dashboard Overview</h1>
-                    <p id="view-subtitle" class="text-secondary">Welcome to NexEditor Lab. Convert your files securely.
-                    </p>
+                <div class="header-title-area" style="display: flex; align-items: center; gap: 20px;">
+                    <button id="header-back-btn" class="btn btn-sm btn-danger-outline" style="display: none; align-items: center; gap: 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 8px 14px; font-weight: 600; font-size: 0.85rem; transition: var(--transition); cursor: pointer;">
+                        <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i> Back to Dashboard
+                    </button>
+                    <div>
+                        <h1 id="view-title">Dashboard Overview</h1>
+                        <p id="view-subtitle" class="text-secondary">Welcome to NexEditor Lab. Convert your files securely.
+                        </p>
+                    </div>
                 </div>
                 <div class="header-actions">
                     <div class="status-indicator"

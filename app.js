@@ -112,7 +112,7 @@ let mergeSortable = null;
     }
 
     // --- 4. VIEW ROUTING & NAVIGATION ---
-    function switchView(targetViewId) {
+    function switchView(targetViewId, updateHash = true) {
         // Find all navbar items representing the target view
         const activeNavs = Array.from(navItems).filter(item => item.getAttribute('data-target') === targetViewId);
         
@@ -163,6 +163,31 @@ let mergeSortable = null;
             viewTitle.textContent = 'Markdown to PDF Editor';
             viewSubtitle.textContent = 'Write using Markdown syntax and render styled, print-ready PDFs.';
         }
+
+        // Show/hide Back button in Desktop top bar
+        const backBtn = document.getElementById('header-back-btn');
+        if (backBtn) {
+            if (targetViewId === 'dashboard-view') {
+                backBtn.style.display = 'none';
+            } else {
+                backBtn.style.display = 'inline-flex';
+            }
+        }
+
+        // Show/hide Back button in Mobile header
+        const mobileBackBtn = document.getElementById('mobile-back-btn');
+        if (mobileBackBtn) {
+            if (targetViewId === 'dashboard-view') {
+                mobileBackBtn.style.display = 'none';
+            } else {
+                mobileBackBtn.style.display = 'flex';
+            }
+        }
+
+        // Sync history state / hash
+        if (updateHash) {
+            window.location.hash = targetViewId;
+        }
     }
 
     navItems.forEach(item => {
@@ -184,6 +209,31 @@ let mergeSortable = null;
     if (cardPdfToImg) cardPdfToImg.addEventListener('click', () => switchView('pdf-to-image-view'));
     if (cardOcr) cardOcr.addEventListener('click', () => switchView('ocr-view'));
     if (cardMarkdown) cardMarkdown.addEventListener('click', () => switchView('markdown-view'));
+
+    // Back Button Click Listeners
+    const headerBackBtn = document.getElementById('header-back-btn');
+    if (headerBackBtn) {
+        headerBackBtn.addEventListener('click', () => {
+            switchView('dashboard-view');
+        });
+    }
+
+    const mobileBackBtn = document.getElementById('mobile-back-btn');
+    if (mobileBackBtn) {
+        mobileBackBtn.addEventListener('click', () => {
+            switchView('dashboard-view');
+        });
+    }
+
+    // Hash Navigation Listener
+    window.addEventListener('hashchange', () => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+            switchView(hash, false);
+        } else {
+            switchView('dashboard-view', false);
+        }
+    });
 
 
     // --- 5. PHOTOS TO PDF WORKSPACE LOGIC ---
@@ -3644,6 +3694,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
     // Initialize themes
     initTheme();
+
+    // Check initial view from hash
+    const initialHash = window.location.hash.replace('#', '');
+    if (initialHash) {
+        switchView(initialHash, false);
+    } else {
+        switchView('dashboard-view', false);
+    }
 
     // Auto-update editor contents to check initial layout
     lucide.createIcons();
