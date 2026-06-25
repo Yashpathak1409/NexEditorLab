@@ -162,6 +162,10 @@ let mergeSortable = null;
         } else if (targetViewId === 'markdown-view') {
             viewTitle.textContent = 'Markdown to PDF Editor';
             viewSubtitle.textContent = 'Write using Markdown syntax and render styled, print-ready PDFs.';
+            // Trigger layout recalculation once editor view is visible and width is non-zero
+            setTimeout(() => {
+                compileMarkdown();
+            }, 100);
         }
 
         // Show/hide Back button in Desktop top bar
@@ -3437,8 +3441,11 @@ let mergeSortable = null;
         const existingIndicators = previewContainer.querySelectorAll('.page-break-indicator');
         existingIndicators.forEach(el => el.remove());
         
+        // If the container is hidden (offsetWidth is 0), skip rendering indicators
+        if (previewContainer.offsetWidth === 0) return;
+        
         // Letter format aspect ratio: 11 / 8.5
-        const width = previewContainer.offsetWidth || 700;
+        const width = previewContainer.offsetWidth;
         const pageHeight = Math.round(width * (11 / 8.5));
         
         // Render boundary indicator at the exact bottom of the page
@@ -3476,7 +3483,10 @@ let mergeSortable = null;
         const previewContainer = document.getElementById('markdown-preview-container');
         if (!previewContainer || !markdownTextarea) return;
         
-        const width = previewContainer.offsetWidth || 700;
+        // If container is hidden, skip limit check (prevents locking input values on load)
+        if (previewContainer.offsetWidth === 0) return;
+        
+        const width = previewContainer.offsetWidth;
         const pageHeight = Math.round(width * (11 / 8.5));
         const containerHeight = previewContainer.scrollHeight;
         
