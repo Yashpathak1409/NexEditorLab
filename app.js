@@ -3276,6 +3276,7 @@ let mergeSortable = null;
     const markdownMarginSelect = document.getElementById('markdown-margin');
     const btnRunMarkdown = document.getElementById('btn-run-markdown');
     const btnCompileMarkdown = document.getElementById('btn-compile-markdown');
+    const btnExportMarkdownImg = document.getElementById('btn-export-markdown-img');
     
     // Sample Templates Triggers
     const templateResume = document.getElementById('template-md-resume');
@@ -3705,6 +3706,74 @@ All systems have compiled successfully. No security or script regressions detect
                 .finally(() => {
                     hideLoader();
                 });
+        });
+    }
+
+    if (btnExportMarkdownImg) {
+        btnExportMarkdownImg.addEventListener('click', () => {
+            if (!markdownPreviewHtml) return;
+
+            showLoader('Exporting Page', 'Generating PNG image...');
+
+            // Temporarily hide page break indicators before capturing
+            const indicators = markdownPreviewContainer.querySelectorAll('.page-break-indicator');
+            indicators.forEach(el => el.style.display = 'none');
+
+            // Set background color to white to ensure the mock paper matches exactly
+            const origBackground = markdownPreviewContainer.style.backgroundColor;
+            markdownPreviewContainer.style.backgroundColor = '#ffffff';
+
+            const markdownFilenameInput = document.getElementById('markdown-filename');
+            let filename = markdownFilenameInput ? markdownFilenameInput.value.trim() : 'markdown_page.png';
+            if (!filename) filename = 'markdown_page.png';
+            
+            // Convert .pdf extension to .png if it exists
+            if (filename.toLowerCase().endsWith('.pdf')) {
+                filename = filename.substring(0, filename.length - 4) + '.png';
+            } else if (!filename.toLowerCase().endsWith('.png')) {
+                filename += '.png';
+            }
+
+            // We use html2canvas which is bundled inside html2pdf.js context
+            const renderCanvas = window.html2canvas || (window.html2pdf ? window.html2pdf.html2canvas : null);
+
+            if (!renderCanvas) {
+                showToast('Renderer engine not loaded. Please try again.', 'error');
+                indicators.forEach(el => el.style.display = 'block');
+                markdownPreviewContainer.style.backgroundColor = origBackground;
+                hideLoader();
+                return;
+            }
+
+            renderCanvas(markdownPreviewContainer, {
+                scale: 2, // 2x scale for crisp text resolution
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+
+                const a = document.createElement('a');
+                a.href = imgData;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Restore styles and indicators
+                indicators.forEach(el => el.style.display = 'block');
+                markdownPreviewContainer.style.backgroundColor = origBackground;
+                
+                hideLoader();
+                showToast('Page saved as PNG image successfully!', 'success');
+                trackAppEvent('export_markdown_image');
+            }).catch(err => {
+                console.error(err);
+                indicators.forEach(el => el.style.display = 'block');
+                markdownPreviewContainer.style.backgroundColor = origBackground;
+                hideLoader();
+                showToast('Failed to save page as image.', 'error');
+            });
         });
     }
 
