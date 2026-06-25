@@ -3322,14 +3322,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
             licenseTextContent.textContent = LICENSE_TEXT;
         }
         if (licenseModal) {
-            licenseModal.style.display = 'flex';
+            licenseModal.classList.add('active');
         }
     }
 
     function closeLicenseModal(e) {
         if (e) e.preventDefault();
         if (licenseModal) {
-            licenseModal.style.display = 'none';
+            licenseModal.classList.remove('active');
         }
     }
 
