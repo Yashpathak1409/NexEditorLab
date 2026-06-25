@@ -1886,6 +1886,11 @@ body.light-theme .moon-icon {
 
 /* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
+    body {
+        overflow-y: auto !important;
+        height: auto !important;
+    }
+
     body.dark-theme .mobile-header,
     body.light-theme .mobile-header {
         display: flex;
@@ -2346,4 +2351,14 @@ body.light-theme .moon-icon {
     .preview-pane {
         height: 500px !important;
     }
+}
+
+#close-license-btn {
+    transition: var(--transition);
+}
+
+#close-license-btn:hover {
+    background-color: var(--bg-hover) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--accent) !important;
 }

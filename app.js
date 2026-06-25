@@ -3295,6 +3295,57 @@ All systems have compiled successfully. No security or script regressions detect
         });
     }
 
+    // License Modal Event Listeners
+    const licenseModal = document.getElementById('license-modal');
+    const licenseTextContent = document.getElementById('license-text-content');
+    const viewLicenseBtn = document.getElementById('view-license-btn');
+    const viewLicenseBtnMobile = document.getElementById('view-license-btn-mobile');
+    const closeLicenseBtn = document.getElementById('close-license-btn');
+    const btnCloseLicenseBottom = document.getElementById('btn-close-license-bottom');
+
+    const LICENSE_TEXT = `Copyright (c) 2026 Yash Pathak. All rights reserved.
+
+Project: NexEditor Lab (Premium PDF & Photo Workspace)
+Author: Yash Pathak
+
+All rights to this software, including the source code, design assets, and compiled assets, are sole property of the author.
+
+Permission is hereby granted to use, copy, modify, and merge this code solely for private and educational use by the author or designated clients of Yash Pathak.
+
+Unauthorized public distribution, commercial resale, or hosting of this software as a paid service without explicit written permission from the author is strictly prohibited.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.`;
+
+    function openLicenseModal(e) {
+        if (e) e.preventDefault();
+        if (licenseTextContent) {
+            licenseTextContent.textContent = LICENSE_TEXT;
+        }
+        if (licenseModal) {
+            licenseModal.style.display = 'flex';
+        }
+    }
+
+    function closeLicenseModal(e) {
+        if (e) e.preventDefault();
+        if (licenseModal) {
+            licenseModal.style.display = 'none';
+        }
+    }
+
+    if (viewLicenseBtn) {
+        viewLicenseBtn.addEventListener('click', openLicenseModal);
+    }
+    if (viewLicenseBtnMobile) {
+        viewLicenseBtnMobile.addEventListener('click', openLicenseModal);
+    }
+    if (closeLicenseBtn) {
+        closeLicenseBtn.addEventListener('click', closeLicenseModal);
+    }
+    if (btnCloseLicenseBottom) {
+        btnCloseLicenseBottom.addEventListener('click', closeLicenseModal);
+    }
+
     // Initialize themes
     initTheme();
 

@@ -31,8 +31,8 @@
     <!-- marked (Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- App Logic script -->
-  <script type="module" crossorigin src="/assets/index-DVp1dg4T.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-WLl13krD.css">
+  <script type="module" crossorigin src="/assets/index-tblQSWVr.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DpdB2M3M.css">
 </head>
 <body class="dark-theme">
     <!-- Mobile Header -->
@@ -43,7 +43,7 @@
             </div>
             <div>
                 <span class="logo-text">NexEditor <span class="gradient-text">Lab</span></span>
-                <p class="logo-subtitle">Creative Workspace Suite • By Yash Pathak</p>
+                <p class="logo-subtitle">Creative Workspace Suite • By Yash Pathak (<a href="#" id="view-license-btn-mobile" style="color: var(--accent); text-decoration: underline;">License</a>)</p>
             </div>
         </div>
         <button id="theme-toggle-mobile" class="theme-toggle-btn-mobile" aria-label="Toggle theme">
@@ -126,7 +126,7 @@
                 </div>
                 <div class="author-credit">
                     <i data-lucide="code-2"></i>
-                    <span>Created by <span class="gradient-text-attribution">Yash Pathak</span></span>
+                    <span>Created by <span class="gradient-text-attribution">Yash Pathak</span> • <a href="#" id="view-license-btn" style="color: var(--accent); text-decoration: underline; font-weight: 600;">License</a></span>
                 </div>
             </div>
         </aside>
@@ -1396,6 +1396,30 @@
             <span>Edit</span>
         </button>
     </nav>
+
+    <!-- Copyright License Modal -->
+    <div class="loader-overlay" id="license-modal" style="display: none; z-index: 9999;">
+        <div class="loader-card" style="max-width: 600px; width: 90%; text-align: left; padding: 32px; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); position: relative; max-height: 85vh; display: flex; flex-direction: column;">
+            <button id="close-license-btn" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color);">
+                <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+            </button>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                <div class="upload-icon-circle" style="margin: 0; width: 44px; height: 44px;">
+                    <i data-lucide="shield" style="color: var(--accent); width: 22px; height: 22px;"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Software License & Copyright</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Proprietary Ownership Certificate</p>
+                </div>
+            </div>
+            <div style="overflow-y: auto; flex-grow: 1; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary); background-color: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); white-space: pre-wrap;" id="license-text-content">
+                <!-- License Content Injected by JS -->
+            </div>
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-secondary" id="btn-close-license-bottom">Close License</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Notification Container -->
     <div class="toast-container" id="toast-container"></div>
