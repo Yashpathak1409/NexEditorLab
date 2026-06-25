@@ -1,3 +1,10 @@
+// --- ANALYTICS TRACKING ---
+function trackAppEvent(eventName, eventData = {}) {
+    if (window.umami && typeof window.umami.track === 'function') {
+        window.umami.track(eventName, eventData);
+    }
+}
+
 // --- APP STATE ---
 let uploadedPhotos = []; // elements: { id: string, name: string, dataUrl: string, size: string, rotation: 0|90|180|270 }
 let sortableInstance = null;
@@ -574,6 +581,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
             if (doc) {
                 doc.save('nexeditor-photos-compiled.pdf');
                 showToast('PDF downloaded successfully!', 'success');
+                trackAppEvent('generate_photos_pdf', { photo_count: uploadedPhotos.length });
             } else {
                 showToast('Failed to generate PDF. Empty document.', 'error');
             }
@@ -1058,10 +1066,12 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                     }
                 }
             })
-            .save()
             .then(() => {
                 hideLoader();
                 showToast('Document exported successfully!', 'success');
+                const fontSelect = document.getElementById('notes-font');
+                const selectedFont = fontSelect ? fontSelect.value : 'unknown';
+                trackAppEvent('generate_notes_pdf', { font: selectedFont });
             })
             .catch(err => {
                 console.error(err);
@@ -1766,6 +1776,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
 
                 doc.save('nexeditor-annotated-document.pdf');
                 showToast('Edited PDF downloaded successfully!', 'success');
+                trackAppEvent('save_annotated_pdf');
             } catch (err) {
                 console.error(err);
                 showToast('Failed to export edited PDF.', 'error');
@@ -1937,6 +1948,9 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                     const compressedName = 'compressed_' + compressPdfFile.name;
                     outDoc.save(compressedName);
                     showToast('PDF compressed and downloaded successfully!', 'success');
+                    const compLevelSelect = document.getElementById('compress-level');
+                    const level = compLevelSelect ? compLevelSelect.value : 'medium';
+                    trackAppEvent('compress_pdf', { level: level });
                 } catch (err) {
                     console.error(err);
                     showToast('Failed to compress PDF file.', 'error');
@@ -2171,6 +2185,9 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                 loaderMessage.textContent = 'All images downloaded!';
                 await new Promise(r => setTimeout(r, 200));
                 showToast('All photos compressed and downloaded successfully!', 'success');
+                const qualityValSelect = document.getElementById('photo-compress-quality');
+                const targetQuality = qualityValSelect ? qualityValSelect.value : '70';
+                trackAppEvent('compress_photo', { quality: targetQuality, photo_count: compressPhotosList.length });
             } catch (err) {
                 console.error(err);
                 showToast('Failed to compress some photos.', 'error');
@@ -2505,6 +2522,9 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                 loaderMessage.textContent = 'All images resized!';
                 await new Promise(r => setTimeout(r, 200));
                 showToast('All photos resized and downloaded successfully!', 'success');
+                const resizeModeSelect = document.getElementById('photo-resize-mode');
+                const mode = resizeModeSelect ? resizeModeSelect.value : 'percentage';
+                trackAppEvent('resize_photo', { mode: mode, photo_count: resizePhotosList.length });
             } catch (err) {
                 console.error(err);
                 showToast('Failed to resize some photos.', 'error');
@@ -2768,6 +2788,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                 URL.revokeObjectURL(downloadUrl);
 
                 showToast('PDF compiled successfully!', 'success');
+                trackAppEvent('organize_pdf_pages', { page_count: uploadedOrganizerPages.length });
             } catch (err) {
                 console.error(err);
                 showToast('Failed to compile reorganized PDF.', 'error');
@@ -2965,6 +2986,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                 URL.revokeObjectURL(downloadUrl);
 
                 showToast('Images zip package downloaded successfully!', 'success');
+                trackAppEvent('convert_pdf_to_images', { format: format, scale: scale });
             } catch (err) {
                 console.error(err);
                 showToast('Failed to convert PDF pages to images.', 'error');
@@ -3107,6 +3129,7 @@ let ocrLoadedFile = null; // { type: 'image'|'pdf', name: string, dataUrl: strin
                     btnCopyOcr.disabled = false;
                     btnDownloadOcr.disabled = false;
                     showToast('Text extracted successfully!', 'success');
+                    trackAppEvent('extract_ocr_text', { language: language, char_length: extractedText.length });
                 } else {
                     showToast('OCR complete, but no text was found.', 'warning');
                 }
@@ -3284,6 +3307,9 @@ All systems have compiled successfully. No security or script regressions detect
             html2pdf().from(markdownPreviewContainer).set(opt).save()
                 .then(() => {
                     showToast('Document printed successfully!', 'success');
+                    const mdFontSelect = document.getElementById('markdown-font');
+                    const selectedFont = mdFontSelect ? mdFontSelect.value : 'font-inter';
+                    trackAppEvent('compile_markdown_pdf', { font: selectedFont });
                 })
                 .catch(err => {
                     console.error(err);

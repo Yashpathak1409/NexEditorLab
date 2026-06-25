@@ -20,35 +20,50 @@
 
 /* Dark Theme Variables (Default) - Sleek Deep Obsidian & Neon Violet */
 body.dark-theme {
-    --bg-app: #090816;          /* Midnight Obsidian */
-    --bg-sidebar: #0E0C22;      /* Obsidian Sidebar */
-    --bg-card: #14122D;         /* Dark Obsidian Panel */
-    --bg-input: #1D1A3B;        /* Purple Carbon Input */
-    --bg-hover: #26224E;        /* Purple Carbon Hover */
-    
-    --border-color: rgba(255, 255, 255, 0.06); /* Ultra thin clean glass border */
-    --border-focus: #8B5CF6;    /* Neon Violet Focus */
-    
-    --text-primary: #F3F4F6;    /* Light Gray Text */
-    --text-secondary: #9CA3AF;  /* Lavender Secondary Text */
-    --text-muted: #6B7280;      /* Dim Gray */
-    --text-inverse: #090816;    /* Dark Obsidian Inverse */
-    
-    --accent: #8B5CF6;          /* Neon Violet */
+    --bg-app: #090816;
+    /* Midnight Obsidian */
+    --bg-sidebar: #0E0C22;
+    /* Obsidian Sidebar */
+    --bg-card: #14122D;
+    /* Dark Obsidian Panel */
+    --bg-input: #1D1A3B;
+    /* Purple Carbon Input */
+    --bg-hover: #26224E;
+    /* Purple Carbon Hover */
+
+    --border-color: rgba(255, 255, 255, 0.06);
+    /* Ultra thin clean glass border */
+    --border-focus: #8B5CF6;
+    /* Neon Violet Focus */
+
+    --text-primary: #F3F4F6;
+    /* Light Gray Text */
+    --text-secondary: #9CA3AF;
+    /* Lavender Secondary Text */
+    --text-muted: #6B7280;
+    /* Dim Gray */
+    --text-inverse: #090816;
+    /* Dark Obsidian Inverse */
+
+    --accent: #8B5CF6;
+    /* Neon Violet */
     --accent-rgb: 139, 92, 246;
     --accent-light: rgba(139, 92, 246, 0.1);
     --accent-glow: rgba(139, 92, 246, 0.3);
-    
-    --success: #10B981;         /* Vibrant Emerald Success */
-    --warning: #F59E0B;         /* Vibrant Amber */
-    --danger: #EF4444;          /* Vibrant Crimson Red */
+
+    --success: #10B981;
+    /* Vibrant Emerald Success */
+    --warning: #F59E0B;
+    /* Vibrant Amber */
+    --danger: #EF4444;
+    /* Vibrant Crimson Red */
     --danger-light: rgba(239, 68, 68, 0.1);
 
     --glass-bg: rgba(20, 18, 45, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
     --paper-bg: #FFFFFF;
     --paper-text: #1C1A17;
-    
+
     --bg-workspace: rgba(255, 255, 255, 0.02);
     --bg-upload-zone: rgba(255, 255, 255, 0.01);
 
@@ -67,35 +82,49 @@ body.dark-theme {
 
 /* Light Theme Variables - Sleek Slate-White & Royal Indigo */
 body.light-theme {
-    --bg-app: #F8FAFC;          /* Slate 50 */
-    --bg-sidebar: #FFFFFF;      /* Pure Alabaster White */
-    --bg-card: #FFFFFF;         /* White panels */
-    --bg-input: #F1F5F9;        /* Slate 100 Overlay */
-    --bg-hover: #E2E8F0;        /* Slate 200 hover */
-    
-    --border-color: #E2E8F0;    /* Clean Slate 200 Border */
-    --border-focus: #6366F1;    /* Royal Indigo Focus */
-    
-    --text-primary: #0F172A;    /* Slate 900 */
-    --text-secondary: #475569;  /* Slate 600 */
-    --text-muted: #64748B;      /* Slate 500 */
+    --bg-app: #F8FAFC;
+    /* Slate 50 */
+    --bg-sidebar: #FFFFFF;
+    /* Pure Alabaster White */
+    --bg-card: #FFFFFF;
+    /* White panels */
+    --bg-input: #F1F5F9;
+    /* Slate 100 Overlay */
+    --bg-hover: #E2E8F0;
+    /* Slate 200 hover */
+
+    --border-color: #E2E8F0;
+    /* Clean Slate 200 Border */
+    --border-focus: #6366F1;
+    /* Royal Indigo Focus */
+
+    --text-primary: #0F172A;
+    /* Slate 900 */
+    --text-secondary: #475569;
+    /* Slate 600 */
+    --text-muted: #64748B;
+    /* Slate 500 */
     --text-inverse: #FFFFFF;
-    
-    --accent: #6366F1;          /* Royal Indigo */
+
+    --accent: #6366F1;
+    /* Royal Indigo */
     --accent-rgb: 99, 102, 241;
     --accent-light: rgba(99, 102, 241, 0.08);
     --accent-glow: rgba(99, 102, 241, 0.25);
-    
-    --success: #059669;         /* Emerald Success */
-    --warning: #D97706;         /* Amber Warning */
-    --danger: #DC2626;          /* Crimson Danger */
+
+    --success: #059669;
+    /* Emerald Success */
+    --warning: #D97706;
+    /* Amber Warning */
+    --danger: #DC2626;
+    /* Crimson Danger */
     --danger-light: rgba(220, 38, 38, 0.08);
 
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(99, 102, 241, 0.08);
     --paper-bg: #FFFFFF;
     --paper-text: #0F172A;
-    
+
     --bg-workspace: rgba(15, 23, 42, 0.02);
     --bg-upload-zone: rgba(15, 23, 42, 0.01);
 
@@ -129,7 +158,12 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -141,7 +175,10 @@ a {
     transition: var(--transition);
 }
 
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
     font-family: inherit;
 }
 
@@ -177,13 +214,16 @@ button {
     width: 6px;
     height: 6px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: var(--radius-full);
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
 }
@@ -267,7 +307,8 @@ button {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 16px 12px 20px; /* Slight extra left padding for indicator */
+    padding: 12px 16px 12px 20px;
+    /* Slight extra left padding for indicator */
     color: var(--text-secondary);
     border-radius: var(--radius-md);
     font-weight: 500;
@@ -491,9 +532,11 @@ body.light-theme .moon-icon {
         transform: scale(0.5);
         opacity: 0;
     }
+
     30% {
         opacity: 0.6;
     }
+
     100% {
         transform: scale(1.6);
         opacity: 0;
@@ -524,8 +567,8 @@ body.light-theme .moon-icon {
 /* --- VIEW 1: DASHBOARD --- */
 .dashboard-hero {
     background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.12), transparent 60%),
-                radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.08), transparent 60%),
-                var(--bg-card);
+        radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.08), transparent 60%),
+        var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     padding: 40px;
@@ -569,6 +612,7 @@ body.light-theme .moon-icon {
     flex-direction: column;
     height: 100%;
 }
+
 .tool-card:hover {
     transform: translateY(-5px) scale(1.01);
     border-color: var(--accent);
@@ -729,7 +773,8 @@ body.light-theme .moon-icon {
     grid-template-columns: 1fr 340px;
     gap: 30px;
     align-items: start;
-    height: calc(100vh - 160px); /* Fill space vertically */
+    height: calc(100vh - 160px);
+    /* Fill space vertically */
 }
 
 .workspace-main {
@@ -863,7 +908,8 @@ body.light-theme .moon-icon {
 }
 
 /* Form Elements */
-.form-select, .form-input {
+.form-select,
+.form-input {
     background-color: var(--bg-input);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -874,12 +920,14 @@ body.light-theme .moon-icon {
     transition: var(--transition);
 }
 
-.form-select::placeholder, .form-input::placeholder {
+.form-select::placeholder,
+.form-input::placeholder {
     color: var(--text-muted);
     opacity: 0.75;
 }
 
-.form-select:focus, .form-input:focus {
+.form-select:focus,
+.form-input:focus {
     border-color: var(--border-focus);
     box-shadow: 0 0 0 2px var(--accent-light);
 }
@@ -910,7 +958,7 @@ body.light-theme .moon-icon {
     transition: var(--transition);
 }
 
-.segmented-control input[type="radio"]:checked + label {
+.segmented-control input[type="radio"]:checked+label {
     background-color: var(--bg-card);
     color: var(--text-primary);
     font-weight: 600;
@@ -1071,7 +1119,8 @@ body.light-theme .moon-icon {
     margin-bottom: 24px;
 }
 
-.upload-zone:hover, .upload-zone.dragover {
+.upload-zone:hover,
+.upload-zone.dragover {
     border-color: var(--accent);
     background-color: var(--accent-light);
 }
@@ -1199,9 +1248,17 @@ body.light-theme .moon-icon {
 }
 
 /* Image Rotation Classes */
-.rotate-90 { transform: rotate(90deg); }
-.rotate-180 { transform: rotate(180deg); }
-.rotate-270 { transform: rotate(270deg); }
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.rotate-270 {
+    transform: rotate(270deg);
+}
 
 .photo-card-actions {
     position: absolute;
@@ -1415,15 +1472,34 @@ body.light-theme .moon-icon {
 }
 
 /* Font Families for Sandbox Paper */
-.page-container-mock.font-inter { font-family: var(--font-sans); }
-.page-container-mock.font-playfair { font-family: var(--font-serif); }
-.page-container-mock.font-outfit { font-family: var(--font-outfit); }
-.page-container-mock.font-mono { font-family: var(--font-mono); }
+.page-container-mock.font-inter {
+    font-family: var(--font-sans);
+}
+
+.page-container-mock.font-playfair {
+    font-family: var(--font-serif);
+}
+
+.page-container-mock.font-outfit {
+    font-family: var(--font-outfit);
+}
+
+.page-container-mock.font-mono {
+    font-family: var(--font-mono);
+}
 
 /* Margins for Sandbox Paper */
-.page-container-mock.margin-small { padding: 40px; }
-.page-container-mock.margin-med { padding: 60px; }
-.page-container-mock.margin-large { padding: 80px; }
+.page-container-mock.margin-small {
+    padding: 40px;
+}
+
+.page-container-mock.margin-med {
+    padding: 60px;
+}
+
+.page-container-mock.margin-large {
+    padding: 80px;
+}
 
 /* The actual text content area */
 .notes-textarea {
@@ -1468,7 +1544,8 @@ body.light-theme .moon-icon {
     color: #334155;
 }
 
-.notes-textarea ul, .notes-textarea ol {
+.notes-textarea ul,
+.notes-textarea ol {
     margin-left: 24px;
     margin-bottom: 16px;
     color: #334155;
@@ -1484,7 +1561,8 @@ body.light-theme .moon-icon {
     margin: 20px 0;
 }
 
-.notes-textarea table td, .notes-textarea table th {
+.notes-textarea table td,
+.notes-textarea table th {
     border: 1px solid #cbd5e1;
     padding: 8px 12px;
     font-size: 0.9rem;
@@ -1607,8 +1685,13 @@ body.light-theme .moon-icon {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loader-card h3 {
@@ -1844,41 +1927,41 @@ body.light-theme .moon-icon {
         overflow-y: visible;
         gap: 24px;
     }
-    
+
     .workspace-main {
         height: auto;
         min-height: 500px;
     }
-    
+
     .workspace-sidebar {
         height: auto;
         overflow-y: visible;
     }
-    
+
     .main-content {
         overflow-y: auto;
         height: 100vh;
     }
-    
+
     .app-container {
         flex-direction: row;
         height: 100vh;
     }
-    
+
     .sidebar {
         width: 240px;
         padding: 20px;
     }
-    
+
     .sidebar-header {
         margin-bottom: 24px;
     }
-    
+
     .nav-item {
         padding: 10px 14px;
         font-size: 0.9rem;
     }
-    
+
     .views-container {
         padding: 24px;
     }
@@ -1918,7 +2001,8 @@ body.light-theme .moon-icon {
     }
 
     .top-header {
-        display: none; /* Hide header on mobile, handled by mobile-header */
+        display: none;
+        /* Hide header on mobile, handled by mobile-header */
     }
 
     .views-container {
@@ -2004,12 +2088,14 @@ body.light-theme .moon-icon {
         padding: 16px;
         min-height: auto;
         border-radius: var(--radius-md);
-        display: flex !important; /* Managed by tab script, visible by default */
+        display: flex !important;
+        /* Managed by tab script, visible by default */
     }
 
     .workspace-sidebar {
         width: 100%;
-        display: none !important; /* Hidden by default, toggled by JS active tabs */
+        display: none !important;
+        /* Hidden by default, toggled by JS active tabs */
     }
 
     /* Show/hide styles classes toggled by JS */
@@ -2057,7 +2143,8 @@ body.light-theme .moon-icon {
     }
 
     .photo-card-actions {
-        opacity: 1; /* Always visible on mobile touchscreens */
+        opacity: 1;
+        /* Always visible on mobile touchscreens */
         top: 4px;
         right: 4px;
     }
@@ -2113,9 +2200,17 @@ body.light-theme .moon-icon {
     }
 
     /* Scale paper view for phone screens */
-    .page-container-mock.margin-small { padding: 16px; }
-    .page-container-mock.margin-med { padding: 20px; }
-    .page-container-mock.margin-large { padding: 24px; }
+    .page-container-mock.margin-small {
+        padding: 16px;
+    }
+
+    .page-container-mock.margin-med {
+        padding: 20px;
+    }
+
+    .page-container-mock.margin-large {
+        padding: 24px;
+    }
 
     .notes-textarea {
         font-size: 0.88rem;
@@ -2138,7 +2233,9 @@ body.light-theme .moon-icon {
         margin-top: 12px;
     }
 
-    .notes-textarea p, .notes-textarea ul, .notes-textarea ol {
+    .notes-textarea p,
+    .notes-textarea ul,
+    .notes-textarea ol {
         margin-bottom: 10px;
     }
 
@@ -2153,6 +2250,7 @@ body.light-theme .moon-icon {
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
     }
+
     .pdf-page-canvas-wrapper .pdf-page-canvas {
         max-width: none !important;
         width: auto !important;
@@ -2186,7 +2284,8 @@ body.light-theme .moon-icon {
     white-space: nowrap;
     overflow: visible;
     cursor: text;
-    pointer-events: none; /* Default to none in navigate/pan mode */
+    pointer-events: none;
+    /* Default to none in navigate/pan mode */
     transition: background-color 0.15s, border-color 0.15s;
     font-family: var(--font-sans);
     font-weight: 500;
@@ -2206,7 +2305,8 @@ body.light-theme .moon-icon {
 }
 
 .pdf-page-canvas-wrapper.mode-text .pdf-editable-text-item:focus {
-    color: inherit; /* Will be set inline by JS */
+    color: inherit;
+    /* Will be set inline by JS */
     background-color: #FFFFFF !important;
     border: 1.5px solid var(--border-focus) !important;
     border-radius: 2px;
@@ -2229,14 +2329,17 @@ body.light-theme .moon-icon {
     background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
     box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
 }
+
 .pdf-to-img-gradient {
     background: linear-gradient(135deg, #EC4899 0%, #F59E0B 100%);
     box-shadow: 0 8px 20px rgba(236, 72, 153, 0.25);
 }
+
 .ocr-gradient {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
 }
+
 .markdown-gradient {
     background: linear-gradient(135deg, #6366F1 0%, #EC4899 100%);
     box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
@@ -2255,29 +2358,35 @@ body.light-theme .moon-icon {
     cursor: grab;
     user-select: none;
 }
+
 .organizer-page-card:active {
     cursor: grabbing;
 }
+
 .organizer-page-card:hover {
     border-color: var(--accent);
     box-shadow: var(--shadow-md);
 }
+
 .organizer-page-card-canvas-wrapper {
     position: relative;
     background-color: #ffffff;
-    aspect-ratio: 0.707; /* A4 Ratio */
+    aspect-ratio: 0.707;
+    /* A4 Ratio */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     width: 100%;
 }
+
 .organizer-page-card canvas {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
+
 .organizer-page-card-actions {
     position: absolute;
     top: 6px;
@@ -2288,9 +2397,11 @@ body.light-theme .moon-icon {
     transition: opacity 0.2s ease;
     z-index: 5;
 }
+
 .organizer-page-card:hover .organizer-page-card-actions {
     opacity: 1;
 }
+
 .organizer-page-card-footer {
     padding: 8px 12px;
     background-color: rgba(0, 0, 0, 0.2);
@@ -2300,6 +2411,7 @@ body.light-theme .moon-icon {
     align-items: center;
     z-index: 2;
 }
+
 .organizer-page-label {
     font-size: 0.7rem;
     font-weight: 500;
@@ -2309,6 +2421,7 @@ body.light-theme .moon-icon {
     text-overflow: ellipsis;
     max-width: 100px;
 }
+
 .organizer-page-number {
     font-size: 0.65rem;
     font-weight: 700;
@@ -2330,7 +2443,9 @@ body.light-theme .moon-icon {
         width: 100%;
         gap: 20px;
     }
-    .editor-pane, .preview-pane {
+
+    .editor-pane,
+    .preview-pane {
         flex: 1;
         height: 100%;
         display: flex;
@@ -2345,9 +2460,11 @@ body.light-theme .moon-icon {
         gap: 20px;
         height: auto;
     }
+
     .editor-pane {
         height: 400px !important;
     }
+
     .preview-pane {
         height: 500px !important;
     }
