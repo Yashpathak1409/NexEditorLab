@@ -510,6 +510,11 @@ let mergeSortable = null;
     btnGeneratePhotoPdf.addEventListener('click', async () => {
         if (uploadedPhotos.length === 0) return;
 
+        const photoFilenameInput = document.getElementById('photo-filename');
+        let filename = photoFilenameInput ? photoFilenameInput.value.trim() : 'photos_document.pdf';
+        if (!filename) filename = 'photos_document.pdf';
+        if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
         const pageSizeOption = document.getElementById('photo-page-size').value;
         const marginOption = document.getElementById('photo-margin').value;
         const fitOption = document.getElementById('photo-fit-mode').value;
@@ -636,7 +641,7 @@ let mergeSortable = null;
             await new Promise(r => setTimeout(r, 200));
 
             if (doc) {
-                doc.save('nexeditor-photos-compiled.pdf');
+                doc.save(filename);
                 showToast('PDF downloaded successfully!', 'success');
                 trackAppEvent('generate_photos_pdf', { photo_count: uploadedPhotos.length });
             } else {
@@ -1024,6 +1029,11 @@ let mergeSortable = null;
     btnGenerateNotesPdf.addEventListener('click', () => {
         showLoader('Generating Notes PDF', 'Rendering document pages...');
         
+        const notesFilenameInput = document.getElementById('notes-filename');
+        let filename = notesFilenameInput ? notesFilenameInput.value.trim() : 'notes_document.pdf';
+        if (!filename) filename = 'notes_document.pdf';
+        if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
         // Settings configuration
         const fontOption = fontSelect.value;
         const marginOption = marginSelect.value;
@@ -1083,7 +1093,7 @@ let mergeSortable = null;
         // html2pdf Options configurations
         const opt = {
             margin: marginValue,
-            filename: 'nexeditor-notes-document.pdf',
+            filename: filename,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
                 scale: 2, 
@@ -1123,6 +1133,7 @@ let mergeSortable = null;
                     }
                 }
             })
+            .save()
             .then(() => {
                 hideLoader();
                 showToast('Document exported successfully!', 'success');
@@ -1321,6 +1332,15 @@ let mergeSortable = null;
         if (!file || file.type !== 'application/pdf') {
             showToast('Skipped file: Please upload a valid PDF document.', 'error');
             return;
+        }
+
+        const editFilenameInput = document.getElementById('edit-filename');
+        if (editFilenameInput) {
+            let annotatedName = 'annotated_' + file.name;
+            if (!annotatedName.toLowerCase().endsWith('.pdf')) {
+                annotatedName += '.pdf';
+            }
+            editFilenameInput.value = annotatedName;
         }
 
         if (file.size > 15 * 1024 * 1024) {
@@ -1831,7 +1851,12 @@ let mergeSortable = null;
                 loaderMessage.textContent = 'Saving PDF document...';
                 await new Promise(r => setTimeout(r, 100));
 
-                doc.save('nexeditor-annotated-document.pdf');
+                const editFilenameInput = document.getElementById('edit-filename');
+                let filename = editFilenameInput ? editFilenameInput.value.trim() : 'annotated_document.pdf';
+                if (!filename) filename = 'annotated_document.pdf';
+                if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
+                doc.save(filename);
                 showToast('Edited PDF downloaded successfully!', 'success');
                 trackAppEvent('save_annotated_pdf');
             } catch (err) {
@@ -1902,6 +1927,15 @@ let mergeSortable = null;
         if (!file || file.type !== 'application/pdf') {
             showToast('Please upload a valid PDF document.', 'error');
             return;
+        }
+
+        const compressFilenameInput = document.getElementById('compress-filename');
+        if (compressFilenameInput) {
+            let compressedName = 'compressed_' + file.name;
+            if (!compressedName.toLowerCase().endsWith('.pdf')) {
+                compressedName += '.pdf';
+            }
+            compressFilenameInput.value = compressedName;
         }
 
         compressPdfFile = file;
@@ -2002,7 +2036,11 @@ let mergeSortable = null;
                     loaderMessage.textContent = 'Assembling final compressed PDF...';
                     await new Promise(r => setTimeout(r, 100));
 
-                    const compressedName = 'compressed_' + compressPdfFile.name;
+                    const compressFilenameInput = document.getElementById('compress-filename');
+                    let compressedName = compressFilenameInput ? compressFilenameInput.value.trim() : 'compressed_' + compressPdfFile.name;
+                    if (!compressedName) compressedName = 'compressed_' + compressPdfFile.name;
+                    if (!compressedName.toLowerCase().endsWith('.pdf')) compressedName += '.pdf';
+
                     outDoc.save(compressedName);
                     showToast('PDF compressed and downloaded successfully!', 'success');
                     trackAppEvent('compress_pdf', { level: level });
@@ -2834,9 +2872,14 @@ let mergeSortable = null;
                 const blob = new Blob([finalBytes], { type: 'application/pdf' });
                 const downloadUrl = URL.createObjectURL(blob);
                 
+                const organizerFilenameInput = document.getElementById('organizer-filename');
+                let filename = organizerFilenameInput ? organizerFilenameInput.value.trim() : 'organized_document.pdf';
+                if (!filename) filename = 'organized_document.pdf';
+                if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
                 const a = document.createElement('a');
                 a.href = downloadUrl;
-                a.download = 'organized_document.pdf';
+                a.download = filename;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -3350,9 +3393,14 @@ All systems have compiled successfully. No security or script regressions detect
             if (markdownPreviewContainer.classList.contains('margin-med')) paddingInches = 0.75;
             if (markdownPreviewContainer.classList.contains('margin-large')) paddingInches = 1.0;
 
+            const markdownFilenameInput = document.getElementById('markdown-filename');
+            let filename = markdownFilenameInput ? markdownFilenameInput.value.trim() : 'markdown_document.pdf';
+            if (!filename) filename = 'markdown_document.pdf';
+            if (!filename.toLowerCase().endsWith('.pdf')) filename += '.pdf';
+
             const opt = {
                 margin: paddingInches,
-                filename: 'markdown_document.pdf',
+                filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
