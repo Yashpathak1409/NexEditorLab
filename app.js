@@ -3277,6 +3277,7 @@ let mergeSortable = null;
     const btnRunMarkdown = document.getElementById('btn-run-markdown');
     const btnCompileMarkdown = document.getElementById('btn-compile-markdown');
     const btnExportMarkdownImg = document.getElementById('btn-export-markdown-img');
+    let lastValidMarkdown = '';
     
     // Sample Templates Triggers
     const templateResume = document.getElementById('template-md-resume');
@@ -3366,6 +3367,7 @@ All systems have compiled successfully. No security or script regressions detect
     // Initialize markdown editor template on load
     if (markdownTextarea) {
         markdownTextarea.value = sampleMemoMD;
+        lastValidMarkdown = sampleMemoMD;
         compileMarkdown();
         
         // Debounce preview update
@@ -3522,48 +3524,67 @@ All systems have compiled successfully. No security or script regressions detect
         const width = previewContainer.offsetWidth || 700;
         const pageHeight = Math.round(width * (11 / 8.5));
         
-        const containerHeight = previewContainer.scrollHeight;
-        const pagesCount = Math.ceil(containerHeight / pageHeight);
+        // Render boundary indicator at the exact bottom of the page
+        const indicator = document.createElement('div');
+        indicator.className = 'page-break-indicator';
+        indicator.style.position = 'absolute';
+        indicator.style.left = '0';
+        indicator.style.right = '0';
+        indicator.style.top = `${pageHeight}px`;
+        indicator.style.borderTop = '2px dashed #f43f5e';
+        indicator.style.zIndex = '10';
+        indicator.style.pointerEvents = 'none';
+        indicator.style.margin = '0';
+        indicator.style.padding = '0';
         
-        // Render dashed lines at page boundaries
-        for (let i = 1; i < pagesCount; i++) {
-            const topPos = i * pageHeight;
-            const indicator = document.createElement('div');
-            indicator.className = 'page-break-indicator';
-            indicator.style.position = 'absolute';
-            indicator.style.left = '0';
-            indicator.style.right = '0';
-            indicator.style.top = `${topPos}px`;
-            indicator.style.borderTop = '2px dashed #f43f5e';
-            indicator.style.zIndex = '10';
-            indicator.style.pointerEvents = 'none';
-            indicator.style.margin = '0';
-            indicator.style.padding = '0';
-            
-            // Label tag on the right side
-            const label = document.createElement('span');
-            label.textContent = `Page ${i} / Page ${i + 1} Split`;
-            label.style.position = 'absolute';
-            label.style.right = '10px';
-            label.style.top = '-10px';
-            label.style.backgroundColor = '#f43f5e';
-            label.style.color = '#ffffff';
-            label.style.fontSize = '0.65rem';
-            label.style.fontWeight = '700';
-            label.style.padding = '2px 6px';
-            label.style.borderRadius = '3px';
-            label.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-            
-            indicator.appendChild(label);
-            previewContainer.appendChild(indicator);
+        // Label tag on the right side
+        const label = document.createElement('span');
+        label.textContent = `Bottom Page Boundary`;
+        label.style.position = 'absolute';
+        label.style.right = '10px';
+        label.style.top = '-10px';
+        label.style.backgroundColor = '#f43f5e';
+        label.style.color = '#ffffff';
+        label.style.fontSize = '0.65rem';
+        label.style.fontWeight = '700';
+        label.style.padding = '2px 6px';
+        label.style.borderRadius = '3px';
+        label.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+        
+        indicator.appendChild(label);
+        previewContainer.appendChild(indicator);
+    }
+
+    function enforceSinglePageLimit() {
+        const previewContainer = document.getElementById('markdown-preview-container');
+        if (!previewContainer || !markdownTextarea) return;
+        
+        const width = previewContainer.offsetWidth || 700;
+        const pageHeight = Math.round(width * (11 / 8.5));
+        const containerHeight = previewContainer.scrollHeight;
+        
+        if (containerHeight > pageHeight) {
+            // Revert value
+            markdownTextarea.value = lastValidMarkdown;
+            // Compile again to sync preview back to the last valid state
+            updateMarkdownPreview();
+            updateMarkdownStyles();
+            setTimeout(renderPageBreakIndicators, 50);
+            showToast('Content limit reached: Document is restricted to exactly one page.', 'warning');
+        } else {
+            lastValidMarkdown = markdownTextarea.value;
         }
     }
 
     function compileMarkdown(showSuccessToast = false) {
         updateMarkdownPreview();
         updateMarkdownStyles();
-        // Give a tiny timeout for DOM rendering, then draw page breaks
-        setTimeout(renderPageBreakIndicators, 50);
+        
+        // Give a tiny timeout for DOM rendering, then draw page breaks and check page limit
+        setTimeout(() => {
+            renderPageBreakIndicators();
+            enforceSinglePageLimit();
+        }, 50);
         
         if (showSuccessToast) {
             showToast('Document compiled successfully!', 'success');
@@ -3611,6 +3632,7 @@ All systems have compiled successfully. No security or script regressions detect
     if (templateResume) {
         templateResume.addEventListener('click', () => {
             markdownTextarea.value = sampleResumeMD;
+            lastValidMarkdown = sampleResumeMD;
             const enableHeaderCheck = document.getElementById('markdown-enable-header');
             if (enableHeaderCheck) enableHeaderCheck.checked = false;
             compileMarkdown();
@@ -3621,6 +3643,7 @@ All systems have compiled successfully. No security or script regressions detect
     if (templateMemo) {
         templateMemo.addEventListener('click', () => {
             markdownTextarea.value = sampleMemoMD;
+            lastValidMarkdown = sampleMemoMD;
             const enableHeaderCheck = document.getElementById('markdown-enable-header');
             if (enableHeaderCheck) enableHeaderCheck.checked = false;
             compileMarkdown();
@@ -3631,6 +3654,7 @@ All systems have compiled successfully. No security or script regressions detect
     if (templateProposal) {
         templateProposal.addEventListener('click', () => {
             markdownTextarea.value = sampleProposalMD;
+            lastValidMarkdown = sampleProposalMD;
             
             // Enable header and set accent
             const enableHeaderCheck = document.getElementById('markdown-enable-header');
