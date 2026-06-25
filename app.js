@@ -3279,95 +3279,12 @@ let mergeSortable = null;
     const btnExportMarkdownImg = document.getElementById('btn-export-markdown-img');
     let lastValidMarkdown = '';
     
-    // Sample Templates Triggers
-    const templateResume = document.getElementById('template-md-resume');
-    const templateMemo = document.getElementById('template-md-memo');
-    const templateProposal = document.getElementById('template-md-proposal');
-
-    const sampleProposalMD = `# PROPOSAL FOR STUDENT ERP SYSTEM
-
-**Submitted To**  
-**Government Medical College, Mirzapur**  
-
-**Submitted By**  
-**CYPASSION TECHNOLOGIES PRIVATE LIMITED**  
-
----
-
-## Company Profile
-
-CYPASSION Technologies Private Limited is a leading Software Development and Digital Transformation company specializing in Educational ERP Solutions, College Management Systems, University Portals, Medical College Automation, Website Development, Mobile Applications, and Institutional Digitalization.
-
-Our mission is to help educational institutions streamline their academic and administrative processes through modern, secure, and scalable technology solutions.
-
-With extensive experience in serving Government Colleges, Medical Colleges, Engineering Colleges, Universities, and Polytechnic Institutes, we have successfully delivered solutions that improve efficiency, transparency, and data management.
-
----
-
-## Implementation Details
-
-Below is a proposed implementation schedule for the Student ERP System:
-
-| Phase | Description | Duration | Status |
-|---|---|---|---|
-| Phase 1 | Requirements Analysis & Database Schema Design | 2 Weeks | Completed |
-| Phase 2 | Core Modules (Admissions, Fees, Exams) Development | 4 Weeks | In Progress |
-| Phase 3 | Portal Integration (Student, Teacher, Parent) | 3 Weeks | Planned |
-| Phase 4 | System Testing, Security Auditing, Deployment | 2 Weeks | Planned |
-
----
-
-*For any queries regarding this proposal, please contact our support desk.*
-`;
-
-    const sampleResumeMD = `# JANE SMITH
-**Location**: San Francisco, CA | **Email**: jane.smith@example.com | **Phone**: (555) 123-4567
-
----
-
-## PROFESSIONAL SUMMARY
-Results-driven software engineer with 5+ years of experience specializing in frontend web application design, performance tuning, and client-side utilities.
-
-## WORK EXPERIENCE
-### **Senior Frontend Engineer** | Pixel Lab (2022 - Present)
-- Developed secure, client-side photo and PDF compilers.
-- Re-architected rendering engines, increasing image compilation speed by 50%.
-- Designed responsive fluid bento grid dashboard layouts.
-
-### **Frontend Developer** | DevCraft Studio (2020 - 2022)
-- Built interactive dashboard systems and live editor preview columns.
-- Collaborated with design teams to structure customized CSS layouts.
-
-## EDUCATION
-### **B.S. in Computer Science** | Stanford University (2016 - 2020)
-`;
-
-    const sampleMemoMD = `# MEMORANDUM
-
-**TO:** Release Engineering Team  
-**FROM:** Product Lead  
-**DATE:** June 25, 2026  
-**SUBJECT:** Release of NexEditor Lab Version 1.2  
-
----
-
-Please be advised that the new suite of local document editors has completed QA verification.
-
-### Key Workspaces Loaded:
-1. **PDF Page Organizer** (Split and Merge documents offline)
-2. **PDF to Image Converter** (Save pages to PNG/JPEG ZIPs)
-3. **Image Text Extractor** (Client-side Tesseract OCR scanner)
-4. **Markdown to PDF Editor** (Interactive markup typesetting engine)
-
-All systems have compiled successfully. No security or script regressions detected.
-
-*Thank you for your cooperation.*
-`;
+    // No templates loaded - empty editor layout initialization
 
     // Initialize markdown editor template on load
     if (markdownTextarea) {
-        markdownTextarea.value = sampleMemoMD;
-        lastValidMarkdown = sampleMemoMD;
+        markdownTextarea.value = "";
+        lastValidMarkdown = "";
         compileMarkdown();
         
         // Debounce preview update
@@ -3629,56 +3546,38 @@ All systems have compiled successfully. No security or script regressions detect
         });
     }
 
-    if (templateResume) {
-        templateResume.addEventListener('click', () => {
-            markdownTextarea.value = sampleResumeMD;
-            lastValidMarkdown = sampleResumeMD;
-            const enableHeaderCheck = document.getElementById('markdown-enable-header');
-            if (enableHeaderCheck) enableHeaderCheck.checked = false;
-            compileMarkdown();
-            showToast('Resume template loaded.', 'success');
-        });
-    }
+    // Markdown Tag Guide Modal Logic
+    const btnShowMarkdownGuide = document.getElementById('btn-show-markdown-guide');
+    const markdownGuideModal = document.getElementById('markdown-guide-modal');
+    const btnCloseMarkdownGuide = document.getElementById('btn-close-markdown-guide');
+    const closeMarkdownGuideBtn = document.getElementById('close-markdown-guide-btn');
 
-    if (templateMemo) {
-        templateMemo.addEventListener('click', () => {
-            markdownTextarea.value = sampleMemoMD;
-            lastValidMarkdown = sampleMemoMD;
-            const enableHeaderCheck = document.getElementById('markdown-enable-header');
-            if (enableHeaderCheck) enableHeaderCheck.checked = false;
-            compileMarkdown();
-            showToast('Business Memo template loaded.', 'success');
-        });
-    }
-
-    if (templateProposal) {
-        templateProposal.addEventListener('click', () => {
-            markdownTextarea.value = sampleProposalMD;
-            lastValidMarkdown = sampleProposalMD;
-            
-            // Enable header and set accent
-            const enableHeaderCheck = document.getElementById('markdown-enable-header');
-            if (enableHeaderCheck) enableHeaderCheck.checked = true;
-            
-            const accentColorSelect = document.getElementById('markdown-accent-color');
-            if (accentColorSelect) accentColorSelect.value = '#10b981';
-            
-            const accentThicknessSelect = document.getElementById('markdown-accent-thickness');
-            if (accentThicknessSelect) accentThicknessSelect.value = '10px';
-            
-            const companyNameInput = document.getElementById('markdown-header-name');
-            if (companyNameInput) companyNameInput.value = 'CyPassion Technologies Private Limited';
-            
-            const companyColorSelect = document.getElementById('markdown-header-color');
-            if (companyColorSelect) companyColorSelect.value = 'match';
-            
-            const headerDetailsInput = document.getElementById('markdown-header-details');
-            if (headerDetailsInput) {
-                headerDetailsInput.value = `EC-66, Chandanvan\nMathura 281001\n(91) 9761444113, 8979744113\nGSTIN : 09AALCC5515C1ZT`;
+    if (btnShowMarkdownGuide && markdownGuideModal) {
+        btnShowMarkdownGuide.addEventListener('click', () => {
+            markdownGuideModal.classList.add('active');
+            if (window.lucide) {
+                window.lucide.createIcons();
             }
-            
-            compileMarkdown();
-            showToast('Project Proposal template loaded with letterhead.', 'success');
+        });
+    }
+
+    function closeMarkdownGuide() {
+        if (markdownGuideModal) {
+            markdownGuideModal.classList.remove('active');
+        }
+    }
+
+    if (btnCloseMarkdownGuide) {
+        btnCloseMarkdownGuide.addEventListener('click', closeMarkdownGuide);
+    }
+    if (closeMarkdownGuideBtn) {
+        closeMarkdownGuideBtn.addEventListener('click', closeMarkdownGuide);
+    }
+    if (markdownGuideModal) {
+        markdownGuideModal.addEventListener('click', (e) => {
+            if (e.target === markdownGuideModal) {
+                closeMarkdownGuide();
+            }
         });
     }
 

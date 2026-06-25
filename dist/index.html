@@ -37,7 +37,7 @@
     <!-- marked (Markdown parsing) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- App Logic script -->
-  <script type="module" crossorigin src="/assets/index-BW2-95Ct.js"></script>
+  <script type="module" crossorigin src="/assets/index-B3I2ovvE.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-hW4sB939.css">
 </head>
 
@@ -1549,7 +1549,7 @@
                                     </div>
                                     <textarea id="markdown-textarea" class="form-input"
                                         style="flex-grow: 1; font-family: var(--font-mono); font-size: 0.88rem; line-height: 1.6; padding: 20px; resize: none; border: none; width: 100%; height: calc(100% - 50px); background-color: var(--bg-sidebar); color: var(--text-primary); outline: none;"
-                                        placeholder="# Write your Document Title here&#10;&#10;Use headings, bullet points, **bold**, *italic*, and even custom tables:&#10;&#10;| Feature | Availability |&#10;|---|---|&#10;| Client-side PDF | 100% Offline |&#10;| Premium Themes | Fully Integrated |"></textarea>
+                                        placeholder="Start typing your custom markdown here...&#10;&#10;Use the Markdown Tag Guide in the sidebar to view formatting tags."></textarea>
                                 </div>
 
                                 <!-- Live Preview Area -->
@@ -1572,11 +1572,11 @@
 
                                             <!-- Letterhead Header Block -->
                                             <div id="markdown-header-block" style="display: none; margin-bottom: 24px; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 20px; text-align: left; width: 100%;">
-                                                <div id="markdown-header-company" style="font-size: 1.4rem; font-weight: 800; color: #10b981; margin-bottom: 6px; font-family: inherit;">CyPassion Technologies Private Limited</div>
-                                                <div id="markdown-header-info" style="font-size: 0.82rem; color: #64748b; line-height: 1.55; white-space: pre-line; font-family: inherit;">EC-66, Chandanvan
-Mathura 281001
-(91) 9761444113, 8979744113
-GSTIN : 09AALCC5515C1ZT</div>
+                                                <div id="markdown-header-company" style="font-size: 1.4rem; font-weight: 800; color: #10b981; margin-bottom: 6px; font-family: inherit;">Your Company Name</div>
+                                                <div id="markdown-header-info" style="font-size: 0.82rem; color: #64748b; line-height: 1.55; white-space: pre-line; font-family: inherit;">123 Business Rd, Suite 100
+City, State, Zip
+Phone: (123) 456-7890
+Email: contact@company.com</div>
                                             </div>
 
                                             <div id="markdown-preview-html" class="notes-textarea"
@@ -1680,7 +1680,7 @@ GSTIN : 09AALCC5515C1ZT</div>
                                 <div id="markdown-header-settings-group" style="display: none; margin-top: 12px; border-left: 2px solid var(--border-color); padding-left: 12px;">
                                     <div class="settings-group">
                                         <label class="settings-label" for="markdown-header-name">Company Name</label>
-                                        <input type="text" id="markdown-header-name" class="form-input" value="CyPassion Technologies Private Limited" placeholder="Enter company name...">
+                                        <input type="text" id="markdown-header-name" class="form-input" value="Your Company Name" placeholder="Enter company name...">
                                     </div>
                                     <div class="settings-group">
                                         <label class="settings-label" for="markdown-header-color">Company Name Color</label>
@@ -1694,42 +1694,68 @@ GSTIN : 09AALCC5515C1ZT</div>
                                     </div>
                                     <div class="settings-group">
                                         <label class="settings-label" for="markdown-header-details">Header Address & Info</label>
-                                        <textarea id="markdown-header-details" class="form-input" style="height: 100px; resize: vertical; font-family: sans-serif; font-size: 0.8rem;" placeholder="Enter address, tax info, numbers...">EC-66, Chandanvan
-Mathura 281001
-(91) 9761444113, 8979744113
-GSTIN : 09AALCC5515C1ZT</textarea>
+                                        <textarea id="markdown-header-details" class="form-input" style="height: 100px; resize: vertical; font-family: sans-serif; font-size: 0.8rem;" placeholder="Enter address, tax info, numbers...">123 Business Rd, Suite 100
+City, State, Zip
+Phone: (123) 456-7890
+Email: contact@company.com</textarea>
                                     </div>
                                 </div>
 
                                 <div class="divider"></div>
 
                                 <div class="settings-group">
-                                    <label class="settings-label">
-                                        <i data-lucide="book-open"></i> Sample Templates
+                                    <label class="settings-label" style="font-weight: 700; color: var(--accent); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="help-circle" style="width: 14px; height: 14px;"></i> Markdown Tag Guide
                                     </label>
-                                    <div class="templates-list" style="margin-top: 8px;">
-                                        <button class="template-item" id="template-md-resume">
-                                            <div class="template-icon"><i data-lucide="user"></i></div>
-                                            <div>
-                                                <h4>Professional Resume</h4>
-                                                <p>Sleek layout for job CV structures.</p>
-                                            </div>
-                                        </button>
-                                        <button class="template-item" id="template-md-memo" style="margin-top: 8px;">
-                                            <div class="template-icon"><i data-lucide="file-text"></i></div>
-                                            <div>
-                                                <h4>Business Memo</h4>
-                                                <p>Standardized document for internal notes.</p>
-                                            </div>
-                                        </button>
-                                        <button class="template-item" id="template-md-proposal" style="margin-top: 8px;">
-                                            <div class="template-icon"><i data-lucide="file-check"></i></div>
-                                            <div>
-                                                <h4>Project Proposal</h4>
-                                                <p>Branded letterhead proposal document.</p>
-                                            </div>
-                                        </button>
+                                    <div class="cheatsheet-card" style="background-color: var(--bg-app); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem;">
+                                        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; font-size: 0.72rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.05em;">
+                                            <span style="color: var(--text-primary);">Tag Syntax</span>
+                                            <span style="color: var(--text-secondary);">Result Description</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;"># Title</code>
+                                            <span style="color: var(--text-muted);">Main Heading (H1)</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">## Section</code>
+                                            <span style="color: var(--text-muted);">Sub-sections (H2)</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">### Info</code>
+                                            <span style="color: var(--text-muted);">Small Heading (H3)</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">**Bold**</code>
+                                            <span style="color: var(--text-muted);">Strong Bolded Text</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">*Italic*</code>
+                                            <span style="color: var(--text-muted);">Emphasized Text</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">---</code>
+                                            <span style="color: var(--text-muted);">Horizontal Divider</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">- Bullet</code>
+                                            <span style="color: var(--text-muted);">Unordered List Item</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">1. Number</code>
+                                            <span style="color: var(--text-muted);">Ordered List Item</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">| A | B |</code>
+                                            <span style="color: var(--text-muted);">Grid Table Layout</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <code style="color: #f43f5e; font-family: var(--font-mono); background: rgba(244, 63, 94, 0.1); padding: 1px 4px; border-radius: 3px;">&gt; Quote</code>
+                                            <span style="color: var(--text-muted);">Indented Quote Box</span>
+                                        </div>
                                     </div>
+                                    <button type="button" class="btn btn-secondary btn-sm btn-block" id="btn-show-markdown-guide" style="margin-top: 10px; font-size: 0.75rem; padding: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background-color: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; border-radius: var(--radius-sm); font-weight: 500; transition: all 0.2s ease;">
+                                        <i data-lucide="book-open" style="width: 13px; height: 13px;"></i> View Full Tag Guide
+                                    </button>
                                 </div>
 
                                 <div class="settings-group">
@@ -1814,6 +1840,178 @@ GSTIN : 09AALCC5515C1ZT</textarea>
             </div>
             <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
                 <button class="btn btn-secondary" id="btn-close-license-bottom">Close License</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Markdown Tag Guide Modal -->
+    <div class="loader-overlay" id="markdown-guide-modal" style="z-index: 9999;">
+        <div class="loader-card"
+            style="max-width: 700px; width: 90%; text-align: left; padding: 32px; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); position: relative; max-height: 85vh; display: flex; flex-direction: column;">
+            <button id="close-markdown-guide-btn"
+                style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color);">
+                <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+            </button>
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+                <div class="upload-icon-circle" style="margin: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.1); border-radius: 50%;">
+                    <i data-lucide="help-circle" style="color: var(--accent); width: 22px; height: 22px;"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary);">Markdown Tag Guide</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Instructions on how to write & format content using tags</p>
+                </div>
+            </div>
+
+            <div style="overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; gap: 20px; padding-right: 8px;">
+                <!-- Guide Section: Headers -->
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px;">1. Headings (Titles & Sections)</h4>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">Use the hash symbol <code>#</code> followed by a space to create headings. Headings structure your document.</p>
+                    <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse; text-align: left; background-color: var(--bg-sidebar); border-radius: 6px; overflow: hidden;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(0,0,0,0.15);">
+                                <th style="padding: 10px; font-weight: 600; width: 40%;">Tag Syntax</th>
+                                <th style="padding: 10px; font-weight: 600;">Type / Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;"># Main Title</td>
+                                <td style="padding: 10px;">Document Title / H1 (Use once per page)</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">## Section Header</td>
+                                <td style="padding: 10px;">Major Section heading / H2</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">### Subsection Header</td>
+                                <td style="padding: 10px;">Minor details or subsections / H3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Guide Section: Typography -->
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px;">2. Text Styling</h4>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">Apply styles to emphasize specific parts of your text.</p>
+                    <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse; text-align: left; background-color: var(--bg-sidebar); border-radius: 6px; overflow: hidden;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(0,0,0,0.15);">
+                                <th style="padding: 10px; font-weight: 600; width: 40%;">Tag Syntax</th>
+                                <th style="padding: 10px; font-weight: 600;">Type / Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">**bold text**</td>
+                                <td style="padding: 10px;"><strong>Bold text</strong> for important key words</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">*italic text*</td>
+                                <td style="padding: 10px;"><em>Italic text</em> for light emphasis</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">***bold & italic***</td>
+                                <td style="padding: 10px;"><strong><em>Bold and italicized</em></strong> combined styling</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">~~strikethrough~~</td>
+                                <td style="padding: 10px;"><del>Strikethrough text</del> for deleted info</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">`code style`</td>
+                                <td style="padding: 10px;"><code style="font-family: var(--font-mono); background: var(--bg-app); padding: 2px 4px; border-radius: 3px;">code style</code> for technical keywords or codes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Guide Section: Lists & Tables -->
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px;">3. Lists & Tables</h4>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">Organize items into structured bulleted lists, numbered tasks, or columns.</p>
+                    <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse; text-align: left; background-color: var(--bg-sidebar); border-radius: 6px; overflow: hidden;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(0,0,0,0.15);">
+                                <th style="padding: 10px; font-weight: 600; width: 45%;">Tag Syntax Example</th>
+                                <th style="padding: 10px; font-weight: 600;">Resulting Layout</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e; white-space: pre-wrap;">- Apple&#10;- Banana&#10;- Cherry</td>
+                                <td style="padding: 10px;">
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        <li>Apple</li>
+                                        <li>Banana</li>
+                                        <li>Cherry</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e; white-space: pre-wrap;">1. First item&#10;2. Second item</td>
+                                <td style="padding: 10px;">
+                                    <ol style="margin: 0; padding-left: 20px;">
+                                        <li>First item</li>
+                                        <li>Second item</li>
+                                    </ol>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e; white-space: pre-wrap;">| Item | Price |&#10;|---|---|&#10;| Coffee | $3.50 |&#10;| Tea | $2.50 |</td>
+                                <td style="padding: 10px;">
+                                    <table style="border: 1px solid var(--border-color); width: 100%; border-collapse: collapse;">
+                                        <tr style="border-bottom: 1px solid var(--border-color); background: rgba(0,0,0,0.1);"><th style="padding: 4px; text-align: left;">Item</th><th style="padding: 4px; text-align: left;">Price</th></tr>
+                                        <tr style="border-bottom: 1px solid var(--border-color);"><td style="padding: 4px;">Coffee</td><td style="padding: 4px;">$3.50</td></tr>
+                                        <tr><td style="padding: 4px;">Tea</td><td style="padding: 4px;">$2.50</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Guide Section: Spacing & Styling Blocks -->
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; border-left: 3px solid var(--accent); padding-left: 8px;">4. Layout Controls (Lines, Spacing, Quotes)</h4>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px;">Separate content dynamically or format callout boxes.</p>
+                    <table style="width: 100%; font-size: 0.8rem; border-collapse: collapse; text-align: left; background-color: var(--bg-sidebar); border-radius: 6px; overflow: hidden;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border-color); background-color: rgba(0,0,0,0.15);">
+                                <th style="padding: 10px; font-weight: 600; width: 40%;">Tag Syntax</th>
+                                <th style="padding: 10px; font-weight: 600;">Resulting Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">---</td>
+                                <td style="padding: 10px;"><strong>Horizontal Divider Line</strong>. You can customize the thickness and color in the "Document Layout" sidebar.</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">&gt; Your quote text here</td>
+                                <td style="padding: 10px;">
+                                    <blockquote style="margin: 0; padding-left: 10px; border-left: 3px solid var(--accent); color: var(--text-secondary); font-style: italic;">
+                                        Your quote text here
+                                    </blockquote>
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">&lt;br&gt; or empty lines</td>
+                                <td style="padding: 10px;">Adds vertical space / line breaks between paragraphs.</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-family: var(--font-mono); color: #f43f5e;">[Link Title](https://example.com)</td>
+                                <td style="padding: 10px;">Clickable URL reference link in the preview.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-secondary" id="btn-close-markdown-guide">Close Tag Guide</button>
             </div>
         </div>
     </div>
