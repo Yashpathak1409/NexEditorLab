@@ -3450,7 +3450,7 @@ let mergeSortable = null;
         
         // Set the height of the mock page container dynamically
         previewContainer.style.minHeight = `${pageHeight}px`;
-        previewContainer.style.height = `${pageHeight}px`;
+        previewContainer.style.height = 'auto';
         
         // Render boundary indicator at the exact bottom of the page
         const indicator = document.createElement('div');
@@ -3493,13 +3493,13 @@ let mergeSortable = null;
         const width = previewContainer.offsetWidth;
         const pageHeight = Math.round(width * (11 / 8.5));
         
-        // Force dynamic height settings before measuring scrollHeight to override CSS min-height: 800px
+        // Force dynamic height settings before measuring offsetHeight to override CSS min-height: 800px
         previewContainer.style.minHeight = `${pageHeight}px`;
-        previewContainer.style.height = `${pageHeight}px`;
+        previewContainer.style.height = 'auto';
         
-        const containerHeight = previewContainer.scrollHeight;
+        const containerHeight = previewContainer.offsetHeight;
         
-        if (containerHeight > pageHeight + 4) { // add 4px tolerance for sub-pixel differences
+        if (containerHeight > pageHeight + 3) { // add 3px tolerance for sub-pixel differences
             // Revert value
             markdownTextarea.value = lastValidMarkdown;
             // Compile again to sync preview back to the last valid state
